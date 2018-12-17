@@ -354,6 +354,7 @@ namespace LEA.Lib.DB
         {
             VoiceCallItem voiceCallItem = obj as VoiceCallItem;
             string connetionString = ConfigUtils.GetConfig()[AppConstants.ConnectionString];
+
             if (voiceCallItem == null) return;
             try
             {
@@ -376,49 +377,34 @@ namespace LEA.Lib.DB
         };
 
 
-        #region Update SmsMessage
+        #region  SmsMessage operation
 
         public SmsMessageItem SmsGetRecorddAction(ProductItem productItem)
         {
             if (productItem == null) return null;
-
-            SmsMessageItem smsMessageItem = new SmsMessageItem();
-            smsMessageItem.Text = "Empty";
-
-            try
-            {
-                string connetionString = ConfigUtils.GetConfig()[AppConstants.ConnectionString];
-
-                using (var sqlConnection = new SqlConnection(connetionString))
-                {
-                    sqlConnection.Open();
-                    String sql = $@"SELECT [Text]
+            string connetionString = ConfigUtils.GetConfig()[AppConstants.ConnectionString];
+            String sql = $@"SELECT [Text],[ProductId]
                                     FROM[dbo].[SmsMessage]
                                     where ProductId = {productItem.Id}";
-                    using (var sqlCommand = new SqlCommand(sql, sqlConnection))
-                    {
-                        var sqlDataReader = sqlCommand.ExecuteReader();
-                        while (sqlDataReader.Read())
-                        {
 
-                            smsMessageItem.Text = sqlDataReader.GetString(0); // Name
-                            smsMessageItem.ProductID = productItem.Id;
-                            break;
+            List<SmsMessageItem> smsMessageItems = new List<SmsMessageItem>();
+            ReadListFromDatabase(smsMessageItems, SmsReadItem, connetionString, sql);
 
-                        }
-                    }
-                    sqlConnection.Close();
-                }
-            }
-            catch (Exception ex)
-            {
-                //TODO using NLOG
-                Console.WriteLine(ex.Message);
-            }
+            if (smsMessageItems.Count > 0)
+            return smsMessageItems[0];
+            return new SmsMessageItem() { ProductID = productItem.Id, Text = "Empty" };
 
-            return smsMessageItem;
         }
 
+        private static bool SmsReadItem(Object obj, SqlDataReader sqlDataReader)
+        {
+            var smsMessageItems = obj as List<SmsMessageItem>;
+            var smsMessageItem = new SmsMessageItem();
+            smsMessageItem.Text = sqlDataReader.GetString(0); // Name
+            smsMessageItem.ProductID = sqlDataReader.GetInt32(1);
+            smsMessageItems.Add(smsMessageItem);
+            return true;
+        }
 
 
         public void SmsUpdateCreateTask(SmsMessageItem smsMessageItem)
@@ -462,12 +448,9 @@ namespace LEA.Lib.DB
             }
         };
 
-        #endregion
+        #endregion  SmsMessage operation
 
 
-        #region Update VoiceCallItem DB record
 
- 
-        #endregion
     }
 }
