@@ -481,12 +481,12 @@ namespace LEA.Browser
             task.ContinueWith(t =>
             {
                 ThreadHelper.SetText(this, textBoxFilePath, t.Result.Path);
-                DBReader.ThreadPool.TryRemove(key, out Task oldItem);
+                DBReader.threadPool.TryRemove(key, out Task oldItem);
 
             });
 
 
-            DBReader.ThreadPool.TryAdd(key, task);
+            DBReader.threadPool.TryAdd(key, task);
             task.Start();
 
             #endregion
@@ -508,13 +508,13 @@ namespace LEA.Browser
             taskSMS.ContinueWith(t =>
             {
                 ThreadHelper.SetText(this, textBoxSMSText, t.Result.Text);
-                DBReader.ThreadPool.TryRemove(keySMS, out Task oldItem);
+                DBReader.threadPool.TryRemove(keySMS, out Task oldItem);
 
             });
 
 
 
-            DBReader.ThreadPool.TryAdd(keySMS, taskSMS);
+            DBReader.threadPool.TryAdd(keySMS, taskSMS);
             taskSMS.Start();
 
 
