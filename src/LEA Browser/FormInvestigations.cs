@@ -108,7 +108,7 @@ namespace LEA.Browser
         {
 
             var dbReader = new DBReader();
-            var investigationItems = dbReader.GetInvestigationItems();
+            var investigationItems = dbReader.InvestigationGetItems();
             BindingList<InvestigationItem> bindingListInvestigation = new BindingList<InvestigationItem>();
             foreach (var item in investigationItems)
             {
@@ -150,7 +150,7 @@ namespace LEA.Browser
                 InvestigationItem investigationItem = dataGridViewInvestigations.Rows[rowModifiedIndex]?.DataBoundItem as InvestigationItem;
                 if (investigationItem != null)
                 {
-                    (new DBReader()).UpdateInvestigationItemRecord((InvestigationItem)investigationItem.Clone());
+                    (new DBReader()).InvestigationUpdateCreateTask((InvestigationItem)investigationItem.Clone());
 
                 }
                 rowModifiedIndex = -1;
@@ -198,7 +198,7 @@ namespace LEA.Browser
         {
 
             DBReader dBReader = new DBReader();
-            InvestigationItem investigationItem = dBReader.AddInvestigation();
+            InvestigationItem investigationItem = dBReader.InvestigationAdd();
 
             if (investigationItem != null)
             {
@@ -235,7 +235,7 @@ namespace LEA.Browser
                 }
 
                 DBReader dBReader = new DBReader();
-                dBReader.DeleteInvestigationRows(rows);
+                dBReader.InvestigationDeleteCreateTask(rows);
 
                 foreach (DataGridViewRow item in dataGridViewInvestigations.SelectedRows)
                 {

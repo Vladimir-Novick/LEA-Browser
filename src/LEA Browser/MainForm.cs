@@ -75,7 +75,7 @@ namespace LEA.Browser
         private void UpdateInvestigationChooser()
         {
             var dbReader = new DBReader();
-            var investigationItems = dbReader.GetInvestigationItems();
+            var investigationItems = dbReader.InvestigationGetItems();
 
             var list = investigationItems.OrderBy(x => x.Name).ToList();
 
@@ -119,7 +119,7 @@ namespace LEA.Browser
         {
             var value = (SelectProductParamItems)e.Argument;
             var dbReader = new DBReader();
-            var productItems = dbReader.GetProduct(value);
+            var productItems = dbReader.ProductGet(value);
             e.Result = productItems;
         }
 
@@ -323,7 +323,7 @@ namespace LEA.Browser
                 }
 
                 DBReader dBReader = new DBReader();
-                dBReader.DeleteProducts(rows);
+                dBReader.ProductDeleteCreateTask(rows);
 
                 foreach (DataGridViewRow item in dataGridViewProduct.SelectedRows)
                 {
@@ -343,7 +343,7 @@ namespace LEA.Browser
                 return;
             }
             DBReader dBReader = new DBReader();
-            BindingList<ProductItem> productItems = dBReader.AddProduct(selectedValue);
+            BindingList<ProductItem> productItems = dBReader.ProductAdd(selectedValue);
 
             if (productItems != null)
             {
@@ -423,7 +423,7 @@ namespace LEA.Browser
                 ProductItem productItem = dataGridViewProduct.Rows[rowModifiedIndex]?.DataBoundItem as ProductItem;
                 if (productItem != null)
                 {
-                    (new DBReader()).UpdateProductRecord((ProductItem)productItem.Clone());
+                    (new DBReader()).ProductUpdateCreateTask((ProductItem)productItem.Clone());
 
                 }
                 rowModifiedIndex = -1;
@@ -474,7 +474,7 @@ namespace LEA.Browser
             Task<VoiceCallItem> task = new Task<VoiceCallItem>(() =>
             {
 
-                return (new DBReader()).GetVoiceRecordAction(productItem);
+                return (new DBReader()).VoiceGetAction(productItem);
             });
 
             String key = "GetVoiceRecord:" + productItem.Id.ToString();
@@ -500,7 +500,7 @@ namespace LEA.Browser
             Task<SmsMessageItem> taskSMS = new Task<SmsMessageItem>(() =>
             {
 
-                return (new DBReader()).GetSmsRecorddAction(productItem);
+                return (new DBReader()).SmsGetRecorddAction(productItem);
             });
 
             String keySMS = "GetSMSRecord:" + productItem.Id.ToString() + GetTimestamp(DateTime.Now);
@@ -605,7 +605,7 @@ namespace LEA.Browser
                 SmsMessageItem smsMessageItem = new SmsMessageItem() { ProductID = currentProductID, Text = newsmsText };
 
                 currentProductID = -1;
-                (new DBReader()).UpdateSmsMessage(smsMessageItem);
+                (new DBReader()).SmsUpdateCreateTask(smsMessageItem);
             }
         }
 
@@ -638,7 +638,7 @@ namespace LEA.Browser
                 VoiceCallItem voiceCallItemArg = new VoiceCallItem() { ProductId = currentProductID, Path = voicePathText };
 
                 currentProductID = -1;
-                (new DBReader()).UpdateVoiceCallItem(voiceCallItemArg);
+                (new DBReader()).VoiceUpdateCreateTask(voiceCallItemArg);
             }
         }
 
