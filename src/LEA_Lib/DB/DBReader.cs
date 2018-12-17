@@ -21,84 +21,84 @@ namespace LEA.Lib.DB
         {
             var productItems = new BindingList<ProductItem>();
             String sql = $"exec SelectProduct @InvestigationId = {param.selectedValue};";
-
-            GetProductList(productItems, sql);
+            string connetionString = ConfigUtils.GetConfig()[AppConstants.ConnectionString];
+            ReadListFromDatabase(productItems, ReadProductItem, connetionString, sql);
+           
 
             return productItems;
         }
 
-        private static void GetProductList(BindingList<ProductItem> productItems, string sql)
+        public BindingList<ProductItem> AddProduct(int investigationId)
         {
-            try
+            var productItems = new BindingList<ProductItem>();
+            String sql = $"exec sp_AddProduct @InvestigationId = {investigationId};";
+            string connetionString = ConfigUtils.GetConfig()[AppConstants.ConnectionString];
+            ReadListFromDatabase(productItems, ReadProductItem, connetionString, sql);
+
+            if (productItems.Count > 0)
             {
-                string connetionString = ConfigUtils.GetConfig()[AppConstants.ConnectionString];
-
-                using (var sqlConnection = new SqlConnection(connetionString))
-                {
-                    sqlConnection.Open();
-
-                    using (var sqlCommand = new SqlCommand(sql, sqlConnection))
-                    {
-                        var sqlDataReader = sqlCommand.ExecuteReader();
-                        while (sqlDataReader.Read())
-                        {
-                            int id = sqlDataReader.GetInt32(0); // id
-                            int Type = sqlDataReader.IsDBNull(1) ? 1 : sqlDataReader.GetInt32(1); // Type
-                            DateTime CreationDate = sqlDataReader.IsDBNull(2) ? DateTime.MinValue : sqlDataReader.GetDateTime(2);
-
-                            String Source = sqlDataReader.IsDBNull(3) ? "" : sqlDataReader.GetString(3); // Source
-                            String Destination = sqlDataReader.IsDBNull(4) ? "" : sqlDataReader.GetString(4); // Destination
-                            int InvestigationId = sqlDataReader.IsDBNull(5) ? 1 : sqlDataReader.GetInt32(5); // InvestigationId
-                            String Investigation = sqlDataReader.IsDBNull(6) ? "" : sqlDataReader.GetString(6); // Investigation
-                            var item = new ProductItem()
-                            {
-                                Id = id,
-                                Type = Type,
-                                CreationDate = CreationDate,
-                                Source = Source,
-                                Destination = Destination,
-                                InvestigationId = InvestigationId,
-                                Investigation = Investigation
-
-                            };
-
-                            productItems.Add(item);
-                        }
-                    }
-                    sqlConnection.Close();
-                }
+                return productItems;
             }
-            catch (Exception ex)
+            return null;
+        }
+
+        private static bool ReadProductItem(Object obj, SqlDataReader sqlDataReader)
+        {
+            BindingList<ProductItem> productItems = obj as BindingList<ProductItem>;
+            int id = sqlDataReader.GetInt32(0); // id
+            int Type = sqlDataReader.IsDBNull(1) ? 1 : sqlDataReader.GetInt32(1); // Type
+            DateTime CreationDate = sqlDataReader.IsDBNull(2) ? DateTime.MinValue : sqlDataReader.GetDateTime(2);
+
+            String Source = sqlDataReader.IsDBNull(3) ? "" : sqlDataReader.GetString(3); // Source
+            String Destination = sqlDataReader.IsDBNull(4) ? "" : sqlDataReader.GetString(4); // Destination
+            int InvestigationId = sqlDataReader.IsDBNull(5) ? 1 : sqlDataReader.GetInt32(5); // InvestigationId
+            String Investigation = sqlDataReader.IsDBNull(6) ? "" : sqlDataReader.GetString(6); // Investigation
+            var item = new ProductItem()
             {
+                Id = id,
+                Type = Type,
+                CreationDate = CreationDate,
+                Source = Source,
+                Destination = Destination,
+                InvestigationId = InvestigationId,
+                Investigation = Investigation
 
-                Console.WriteLine(ex.Message);
-            }
+            };
+
+            productItems.Add(item);
+            return true;
         }
 
         public List<InvestigationItem> GetInvestigationItems()
         {
             var investigations = new List<InvestigationItem>();
 
+            string connetionString = ConfigUtils.GetConfig()[AppConstants.ConnectionString];
+            String sql = "Select * from dbo.[Investigation];";
+
+            ReadListFromDatabase(investigations, ReadInvestigations, connetionString, sql);
+            return investigations;
+        }
 
 
+
+        private static void ReadListFromDatabase(Object list, 
+               Func<Object,SqlDataReader,bool> ReadInvestigationItem,
+               string connetionString, 
+               string sql)
+        {
             try
             {
-                string connetionString = ConfigUtils.GetConfig()[AppConstants.ConnectionString];
-
                 using (var sqlConnection = new SqlConnection(connetionString))
                 {
                     sqlConnection.Open();
-                    String sql = "Select * from dbo.[Investigation];";
+
                     using (var sqlCommand = new SqlCommand(sql, sqlConnection))
                     {
                         var sqlDataReader = sqlCommand.ExecuteReader();
                         while (sqlDataReader.Read())
                         {
-                            int id = sqlDataReader.GetInt32(0); // id
-                            String Name = sqlDataReader.GetString(1); // Name
-                            DateTime CreationDate = sqlDataReader.GetDateTime(2);
-                            var item = new InvestigationItem() { id = id, Name = Name, CreationDate = CreationDate };
-                            investigations.Add(item);
+                            ReadInvestigationItem(list, sqlDataReader);
                         }
                     }
                     sqlConnection.Close();
@@ -109,10 +109,20 @@ namespace LEA.Lib.DB
                 //TODO using NLOG
                 Console.WriteLine(ex.Message);
             }
-            return investigations;
         }
 
-        Action<object> deleteProductAction = (object obj) =>
+        private static bool ReadInvestigations(Object obj, SqlDataReader sqlDataReader)
+        {
+            List<InvestigationItem> investigations = obj as List<InvestigationItem>;
+            int id = sqlDataReader.GetInt32(0); // id
+            String Name = sqlDataReader.GetString(1); // Name
+            DateTime CreationDate = sqlDataReader.GetDateTime(2);
+            var item = new InvestigationItem() { id = id, Name = Name, CreationDate = CreationDate };
+            investigations.Add(item);
+            return true;
+        }
+
+        Action<object> DeleteProductAction = (object obj) =>
         {
             List<int> deleteRecords = (List<int>)obj;
 
@@ -281,7 +291,7 @@ namespace LEA.Lib.DB
 
         public void DeleteProducts(List<int> rows)
         {
-            Task task = new Task(deleteProductAction, rows);
+            Task task = new Task(DeleteProductAction, rows);
             String key = rows.ToKey();
             ThreadPool.TryAdd(key, task);
             task.ContinueWith(t =>
@@ -293,18 +303,7 @@ namespace LEA.Lib.DB
             task.Start();
         }
 
-        public BindingList<ProductItem> AddProduct(int investigationId)
-        {
-            var productItems = new BindingList<ProductItem>();
-            String sql = $"exec sp_AddProduct @InvestigationId = {investigationId};";
 
-            GetProductList(productItems, sql);
-            if (productItems.Count > 0)
-            {
-                return productItems;
-            }
-            return null;
-        }
 
         #region UpdateProductRecord
 
