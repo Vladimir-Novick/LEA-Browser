@@ -11,6 +11,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+
 namespace LEA.Browser
 {
     public partial class MainForm : Form
@@ -20,6 +21,8 @@ namespace LEA.Browser
         private BindingSource productBindingSource = new BindingSource();
 
         private VoiceCallItem voiceCallItem = new VoiceCallItem();
+
+        private string[] typeValues = { "Call", "SMS" };
 
         private void MainForm_Load(object sender, EventArgs e)
         {
@@ -36,6 +39,7 @@ namespace LEA.Browser
                 MessageBox.Show($"Failed to load {ex.Message}");
             }
         }
+
 
         private void InitDataGridViewProduct()
         {
@@ -54,7 +58,7 @@ namespace LEA.Browser
             img.Name = "img";
             dataGridViewProduct.Columns.Add(img);
             dataGridViewProduct.Columns["img"].Width = 42;
-            dataGridViewProduct.Columns["Type"].AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
+            dataGridViewProduct.Columns["Type"].Visible = false;
 
             dataGridViewProduct.Columns["CreationDate"].DefaultCellStyle.Format = "dd.MM.yyyy";
             dataGridViewProduct.Columns["CreationDate"].AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
@@ -65,7 +69,22 @@ namespace LEA.Browser
             columnHeaderStyle.Font = new Font("Verdana", 9, FontStyle.Bold);
             dataGridViewProduct.ColumnHeadersDefaultCellStyle = columnHeaderStyle;
 
-            dataGridViewProduct.ReadOnly = true;
+            DataGridViewComboBoxColumn dataGridViewComboBoxColumn = new DataGridViewComboBoxColumn();
+
+            dataGridViewComboBoxColumn.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
+
+
+            dataGridViewComboBoxColumn.HeaderText = "Type";
+
+           for (int itype = 0; itype < typeValues.Length; itype++)
+            {
+                dataGridViewComboBoxColumn.Items.Add(typeValues[itype]);
+            }
+
+            dataGridViewProduct.Columns.Insert(0,dataGridViewComboBoxColumn);
+
+
+           dataGridViewProduct.ReadOnly = true;
 
         }
 
@@ -147,6 +166,7 @@ namespace LEA.Browser
 
             for (int i = 0; i < dataGridViewProduct.Rows.Count; i++)
             {
+                
                 int type = GetRecordType(i);
                 SetImageToRecord(i, type);
             }
@@ -155,6 +175,7 @@ namespace LEA.Browser
         private int GetRecordType(int recordIndex)
         {
             DataGridViewRow item = dataGridViewProduct.Rows[recordIndex];
+
             string str = (item.Cells["Type"].Value?.ToString()) ?? "";
 
             int type = -1;
@@ -167,9 +188,11 @@ namespace LEA.Browser
             switch (recordType)
             {
                 case AppConstants.CallRecordTypeCallID:
+                    dataGridViewProduct.Rows[rowIndex].Cells[0].Value = typeValues[0];
                     dataGridViewProduct.Rows[rowIndex].Cells["img"].Value = LEA_Browser.Properties.Resources.call;
                     break;
                 case AppConstants.CallRecordTypeSmsID:
+                    dataGridViewProduct.Rows[rowIndex].Cells[0].Value = typeValues[1];
                     dataGridViewProduct.Rows[rowIndex].Cells["img"].Value = LEA_Browser.Properties.Resources.sms;
                     break;
                 default:
@@ -180,11 +203,7 @@ namespace LEA.Browser
 
         private void dataGridViewProduct_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.ColumnIndex == 2) // Type field
-            {
-                int objectType = (int)dataGridViewProduct.Rows[e.RowIndex].Cells["Type"].Value;
-                SetImageToRecord(e.RowIndex, objectType);
-            }
+
         }
 
         internal void pictureBox1_MouseEnter(object sender, EventArgs e) =>
@@ -357,38 +376,67 @@ namespace LEA.Browser
         private void buttonRefresh_Click(object sender, EventArgs e)
               => GetProductList(comboBoxInvestigationChooser);
 
-        void tx_KeyPress(object sender, KeyPressEventArgs e) =>
-              e.Handled = (!(char.IsNumber(e.KeyChar) || e.KeyChar == '\b')) ? true : false;
+
 
         private void dataGridViewProduct_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
         {
-            TextBox tx = e.Control as TextBox;
-            if (this.dataGridViewProduct.CurrentCell.ColumnIndex == 2)
+
+
+            if (this.dataGridViewProduct.CurrentCell.ColumnIndex == 0)
             {
-                tx.KeyPress += new KeyPressEventHandler(tx_KeyPress);
-            }
-            else
+                ComboBox cb= e.Control as ComboBox;
+                if (cb != null)
+                {
+                    cb.TextChanged -= Cb_TextChanged;
+                    cb.TextChanged +=  Cb_TextChanged;
+                }
+            } else
             {
-                tx.KeyPress -= new KeyPressEventHandler(tx_KeyPress);
+                TextBox tb = e.Control as TextBox;
+                if (tb != null)
+                {
+                    tb.TextChanged -= Tb_TextChanged;
+                    tb.TextChanged += Tb_TextChanged;
+                        
+                }
             }
 
-            tx.TextChanged += new EventHandler(tb_TextChanged);
 
+        }
+
+        private void Tb_TextChanged(object sender, EventArgs e)
+            => rowModifiedIndex = dataGridViewProduct.CurrentRow.Index;
+
+        private void Cb_TextChanged(object sender, EventArgs e)
+        {
+            ComboBox cb = sender as ComboBox;
+            String selectedType = cb.Text;
+
+            if (selectedType != null)
+            {
+
+                var index = Array.IndexOf(typeValues, selectedType);
+                int currentRow = dataGridViewProduct.CurrentRow.Index;
+                dataGridViewProduct.Rows[currentRow].Cells["Type"].Value = index + 1;
+                int objectType = (int)dataGridViewProduct.Rows[currentRow].Cells["Type"].Value;
+                SetImageToRecord(currentRow, objectType);
+                rowModifiedIndex = dataGridViewProduct.CurrentRow.Index;
+            }
+          
         }
 
         private int rowModifiedIndex = -1;
 
-        void tb_TextChanged(object sender, EventArgs e)
-             => rowModifiedIndex = dataGridViewProduct.CurrentRow.Index;
+
 
         private void dataGridViewProduct_CellValidating_1(object sender, DataGridViewCellValidatingEventArgs e)
         {
-            if (e.ColumnIndex == 2)
+            if (e.ColumnIndex == 3)
             {
                 int value = GetRecordType(e.RowIndex);
                 if (value == -1)
                 {
-                    dataGridViewProduct.Rows[e.RowIndex].Cells[2].Value = AppConstants.CallRecordTypeCallID;
+                    dataGridViewProduct.Rows[e.RowIndex].Cells[3].Value = AppConstants.CallRecordTypeCallID;
                     e.Cancel = true;
                 }
             }
@@ -398,7 +446,7 @@ namespace LEA.Browser
 
         private void dataGridViewProduct_DataError(object sender, DataGridViewDataErrorEventArgs anError)
         {
-            if (anError.ColumnIndex == 2)
+            if (anError.ColumnIndex == 3)
             {
                 // MessageBox.Show("Product type not be empty");
             }
@@ -409,7 +457,10 @@ namespace LEA.Browser
         }
 
         private void dataGridViewProduct_CellEndEdit(object sender, DataGridViewCellEventArgs e)
-            => dataGridViewProduct.BindingContext[dataGridViewProduct.DataSource].EndCurrentEdit();
+        { 
+            dataGridViewProduct.BindingContext[dataGridViewProduct.DataSource].EndCurrentEdit();
+            dataGridViewProduct.EndEdit();
+        }
 
 
         private void dataGridViewProduct_SelectionChanged(object sender, EventArgs e)
@@ -554,7 +605,7 @@ namespace LEA.Browser
             if (dataGridViewProduct.IsCurrentCellDirty)
             {
                 dataGridViewProduct.CommitEdit(DataGridViewDataErrorContexts.Commit);
-                if (dataGridViewProduct.CurrentCell.ColumnIndex == 2)
+                if (dataGridViewProduct.CurrentCell.ColumnIndex == 3)
                 {
                     SaveProductRow();
                     int? type = dataGridViewProduct.CurrentCell.Value as int?;
@@ -643,5 +694,7 @@ namespace LEA.Browser
         }
 
         #endregion
+
+
     }
 }

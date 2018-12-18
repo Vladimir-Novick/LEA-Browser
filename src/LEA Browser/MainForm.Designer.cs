@@ -29,6 +29,11 @@
         private void InitializeComponent()
         {
             this.TopPanel = new System.Windows.Forms.Panel();
+            this.buttonSave = new LEA_Browser.ButtonImageBox();
+            this.buttonRefresh = new LEA_Browser.ButtonImageBox();
+            this.buttonAddRow = new LEA_Browser.ButtonImageBox();
+            this.buttonImageBoxEditChooser = new LEA_Browser.ButtonImageBox();
+            this.buttonImageBoxDelete = new LEA_Browser.ButtonImageBox();
             this.pictureBoxCastle = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
             this.comboBoxInvestigationChooser = new System.Windows.Forms.ComboBox();
@@ -39,6 +44,8 @@
             this.panel6 = new System.Windows.Forms.Panel();
             this.textBoxFilePath = new System.Windows.Forms.TextBox();
             this.panel5 = new System.Windows.Forms.Panel();
+            this.buttonImageBoxGetFolder = new LEA_Browser.ButtonImageBox();
+            this.buttonPlay = new LEA_Browser.ButtonImageBox();
             this.panel4 = new System.Windows.Forms.Panel();
             this.label3 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
@@ -49,14 +56,12 @@
             this.label4 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.backgroundWorkerChooser = new System.ComponentModel.BackgroundWorker();
-            this.buttonImageBoxGetFolder = new LEA_Browser.ButtonImageBox();
-            this.buttonPlay = new LEA_Browser.ButtonImageBox();
-            this.buttonSave = new LEA_Browser.ButtonImageBox();
-            this.buttonRefresh = new LEA_Browser.ButtonImageBox();
-            this.buttonAddRow = new LEA_Browser.ButtonImageBox();
-            this.buttonImageBoxEditChooser = new LEA_Browser.ButtonImageBox();
-            this.buttonImageBoxDelete = new LEA_Browser.ButtonImageBox();
             this.TopPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.buttonSave)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.buttonRefresh)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.buttonAddRow)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.buttonImageBoxEditChooser)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.buttonImageBoxDelete)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCastle)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewProduct)).BeginInit();
@@ -64,19 +69,14 @@
             this.Panel_CallDetails.SuspendLayout();
             this.panel6.SuspendLayout();
             this.panel5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.buttonImageBoxGetFolder)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.buttonPlay)).BeginInit();
             this.panel4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.Panel_SmsDetails.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.buttonImageBoxGetFolder)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.buttonPlay)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.buttonSave)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.buttonRefresh)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.buttonAddRow)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.buttonImageBoxEditChooser)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.buttonImageBoxDelete)).BeginInit();
             this.SuspendLayout();
             // 
             // TopPanel
@@ -95,6 +95,81 @@
             this.TopPanel.Name = "TopPanel";
             this.TopPanel.Size = new System.Drawing.Size(619, 34);
             this.TopPanel.TabIndex = 1;
+            // 
+            // buttonSave
+            // 
+            this.buttonSave.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.buttonSave.DisableImage = global::LEA_Browser.Properties.Resources.save22_disabled1;
+            this.buttonSave.Enabled = false;
+            this.buttonSave.EnableImage = global::LEA_Browser.Properties.Resources.save22;
+            this.buttonSave.Image = global::LEA_Browser.Properties.Resources.save22_disabled1;
+            this.buttonSave.Location = new System.Drawing.Point(45, 4);
+            this.buttonSave.Name = "buttonSave";
+            this.buttonSave.Size = new System.Drawing.Size(43, 27);
+            this.buttonSave.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.buttonSave.TabIndex = 9;
+            this.buttonSave.TabStop = false;
+            this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
+            // 
+            // buttonRefresh
+            // 
+            this.buttonRefresh.BackColor = System.Drawing.Color.Transparent;
+            this.buttonRefresh.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.buttonRefresh.DisableImage = global::LEA_Browser.Properties.Resources.refresh22;
+            this.buttonRefresh.EnableImage = global::LEA_Browser.Properties.Resources.refresh22;
+            this.buttonRefresh.Image = global::LEA_Browser.Properties.Resources.refresh22;
+            this.buttonRefresh.Location = new System.Drawing.Point(129, 4);
+            this.buttonRefresh.Name = "buttonRefresh";
+            this.buttonRefresh.Size = new System.Drawing.Size(43, 27);
+            this.buttonRefresh.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.buttonRefresh.TabIndex = 8;
+            this.buttonRefresh.TabStop = false;
+            this.buttonRefresh.Click += new System.EventHandler(this.buttonRefresh_Click);
+            // 
+            // buttonAddRow
+            // 
+            this.buttonAddRow.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.buttonAddRow.DisableImage = global::LEA_Browser.Properties.Resources.plus22_disabled11;
+            this.buttonAddRow.Enabled = false;
+            this.buttonAddRow.EnableImage = global::LEA_Browser.Properties.Resources.plus221;
+            this.buttonAddRow.Image = global::LEA_Browser.Properties.Resources.plus22_disabled11;
+            this.buttonAddRow.Location = new System.Drawing.Point(87, 4);
+            this.buttonAddRow.Name = "buttonAddRow";
+            this.buttonAddRow.Size = new System.Drawing.Size(43, 27);
+            this.buttonAddRow.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.buttonAddRow.TabIndex = 7;
+            this.buttonAddRow.TabStop = false;
+            this.buttonAddRow.Click += new System.EventHandler(this.buttonAddRow_Click);
+            // 
+            // buttonImageBoxEditChooser
+            // 
+            this.buttonImageBoxEditChooser.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.buttonImageBoxEditChooser.DisableImage = global::LEA_Browser.Properties.Resources.plus22_disabled11;
+            this.buttonImageBoxEditChooser.Enabled = false;
+            this.buttonImageBoxEditChooser.EnableImage = global::LEA_Browser.Properties.Resources.plus221;
+            this.buttonImageBoxEditChooser.Image = global::LEA_Browser.Properties.Resources.plus22_disabled11;
+            this.buttonImageBoxEditChooser.Location = new System.Drawing.Point(531, 4);
+            this.buttonImageBoxEditChooser.Name = "buttonImageBoxEditChooser";
+            this.buttonImageBoxEditChooser.Size = new System.Drawing.Size(32, 27);
+            this.buttonImageBoxEditChooser.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.buttonImageBoxEditChooser.TabIndex = 6;
+            this.buttonImageBoxEditChooser.TabStop = false;
+            this.buttonImageBoxEditChooser.Click += new System.EventHandler(this.buttonImageBoxEditChooser_Click);
+            // 
+            // buttonImageBoxDelete
+            // 
+            this.buttonImageBoxDelete.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.buttonImageBoxDelete.DisableImage = global::LEA_Browser.Properties.Resources.trash22_disabled1;
+            this.buttonImageBoxDelete.Enabled = false;
+            this.buttonImageBoxDelete.EnableImage = global::LEA_Browser.Properties.Resources.trash22;
+            this.buttonImageBoxDelete.Image = global::LEA_Browser.Properties.Resources.trash22_disabled1;
+            this.buttonImageBoxDelete.Location = new System.Drawing.Point(3, 4);
+            this.buttonImageBoxDelete.Name = "buttonImageBoxDelete";
+            this.buttonImageBoxDelete.Size = new System.Drawing.Size(43, 27);
+            this.buttonImageBoxDelete.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.buttonImageBoxDelete.TabIndex = 4;
+            this.buttonImageBoxDelete.TabStop = false;
+            this.buttonImageBoxDelete.Click += new System.EventHandler(this.buttonImageBoxDelete_Click);
             // 
             // pictureBoxCastle
             // 
@@ -223,6 +298,36 @@
             this.panel5.Size = new System.Drawing.Size(44, 60);
             this.panel5.TabIndex = 2;
             // 
+            // buttonImageBoxGetFolder
+            // 
+            this.buttonImageBoxGetFolder.DisableImage = global::LEA_Browser.Properties.Resources.get_folder22_disabled;
+            this.buttonImageBoxGetFolder.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.buttonImageBoxGetFolder.Enabled = false;
+            this.buttonImageBoxGetFolder.EnableImage = global::LEA_Browser.Properties.Resources.get_folder22;
+            this.buttonImageBoxGetFolder.Image = global::LEA_Browser.Properties.Resources.get_folder22_disabled;
+            this.buttonImageBoxGetFolder.Location = new System.Drawing.Point(0, 31);
+            this.buttonImageBoxGetFolder.Name = "buttonImageBoxGetFolder";
+            this.buttonImageBoxGetFolder.Size = new System.Drawing.Size(44, 29);
+            this.buttonImageBoxGetFolder.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.buttonImageBoxGetFolder.TabIndex = 1;
+            this.buttonImageBoxGetFolder.TabStop = false;
+            this.buttonImageBoxGetFolder.Click += new System.EventHandler(this.buttonImageBoxGetFolder_Click);
+            // 
+            // buttonPlay
+            // 
+            this.buttonPlay.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonPlay.DisableImage = global::LEA_Browser.Properties.Resources.play22_disabled;
+            this.buttonPlay.EnableImage = global::LEA_Browser.Properties.Resources.play22;
+            this.buttonPlay.Image = global::LEA_Browser.Properties.Resources.play22;
+            this.buttonPlay.Location = new System.Drawing.Point(3, 3);
+            this.buttonPlay.Name = "buttonPlay";
+            this.buttonPlay.Size = new System.Drawing.Size(38, 22);
+            this.buttonPlay.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.buttonPlay.TabIndex = 0;
+            this.buttonPlay.TabStop = false;
+            // 
             // panel4
             // 
             this.panel4.Controls.Add(this.label3);
@@ -324,111 +429,6 @@
             this.backgroundWorkerChooser.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorkerChooser_DoWork);
             this.backgroundWorkerChooser.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorkerChooser_RunWorkerCompleted);
             // 
-            // buttonImageBoxGetFolder
-            // 
-            this.buttonImageBoxGetFolder.DisableImage = global::LEA_Browser.Properties.Resources.get_folder22_disabled;
-            this.buttonImageBoxGetFolder.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.buttonImageBoxGetFolder.Enabled = false;
-            this.buttonImageBoxGetFolder.EnableImage = global::LEA_Browser.Properties.Resources.get_folder22;
-            this.buttonImageBoxGetFolder.Image = global::LEA_Browser.Properties.Resources.get_folder22_disabled;
-            this.buttonImageBoxGetFolder.Location = new System.Drawing.Point(0, 31);
-            this.buttonImageBoxGetFolder.Name = "buttonImageBoxGetFolder";
-            this.buttonImageBoxGetFolder.Size = new System.Drawing.Size(44, 29);
-            this.buttonImageBoxGetFolder.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            this.buttonImageBoxGetFolder.TabIndex = 1;
-            this.buttonImageBoxGetFolder.TabStop = false;
-            this.buttonImageBoxGetFolder.Click += new System.EventHandler(this.buttonImageBoxGetFolder_Click);
-            // 
-            // buttonPlay
-            // 
-            this.buttonPlay.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonPlay.DisableImage = global::LEA_Browser.Properties.Resources.play22_disabled;
-            this.buttonPlay.EnableImage = global::LEA_Browser.Properties.Resources.play22;
-            this.buttonPlay.Image = global::LEA_Browser.Properties.Resources.play22;
-            this.buttonPlay.Location = new System.Drawing.Point(3, 3);
-            this.buttonPlay.Name = "buttonPlay";
-            this.buttonPlay.Size = new System.Drawing.Size(38, 22);
-            this.buttonPlay.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            this.buttonPlay.TabIndex = 0;
-            this.buttonPlay.TabStop = false;
-            // 
-            // buttonSave
-            // 
-            this.buttonSave.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.buttonSave.DisableImage = global::LEA_Browser.Properties.Resources.save22_disabled1;
-            this.buttonSave.Enabled = false;
-            this.buttonSave.EnableImage = global::LEA_Browser.Properties.Resources.save22;
-            this.buttonSave.Image = global::LEA_Browser.Properties.Resources.save22_disabled1;
-            this.buttonSave.Location = new System.Drawing.Point(45, 4);
-            this.buttonSave.Name = "buttonSave";
-            this.buttonSave.Size = new System.Drawing.Size(43, 27);
-            this.buttonSave.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            this.buttonSave.TabIndex = 9;
-            this.buttonSave.TabStop = false;
-            this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
-            // 
-            // buttonRefresh
-            // 
-            this.buttonRefresh.BackColor = System.Drawing.Color.Transparent;
-            this.buttonRefresh.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.buttonRefresh.DisableImage = global::LEA_Browser.Properties.Resources.refresh22;
-            this.buttonRefresh.EnableImage = global::LEA_Browser.Properties.Resources.refresh22;
-            this.buttonRefresh.Image = global::LEA_Browser.Properties.Resources.refresh22;
-            this.buttonRefresh.Location = new System.Drawing.Point(129, 4);
-            this.buttonRefresh.Name = "buttonRefresh";
-            this.buttonRefresh.Size = new System.Drawing.Size(43, 27);
-            this.buttonRefresh.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            this.buttonRefresh.TabIndex = 8;
-            this.buttonRefresh.TabStop = false;
-            this.buttonRefresh.Click += new System.EventHandler(this.buttonRefresh_Click);
-            // 
-            // buttonAddRow
-            // 
-            this.buttonAddRow.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.buttonAddRow.DisableImage = global::LEA_Browser.Properties.Resources.plus22_disabled11;
-            this.buttonAddRow.Enabled = false;
-            this.buttonAddRow.EnableImage = global::LEA_Browser.Properties.Resources.plus221;
-            this.buttonAddRow.Image = global::LEA_Browser.Properties.Resources.plus22_disabled11;
-            this.buttonAddRow.Location = new System.Drawing.Point(87, 4);
-            this.buttonAddRow.Name = "buttonAddRow";
-            this.buttonAddRow.Size = new System.Drawing.Size(43, 27);
-            this.buttonAddRow.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            this.buttonAddRow.TabIndex = 7;
-            this.buttonAddRow.TabStop = false;
-            this.buttonAddRow.Click += new System.EventHandler(this.buttonAddRow_Click);
-            // 
-            // buttonImageBoxEditChooser
-            // 
-            this.buttonImageBoxEditChooser.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.buttonImageBoxEditChooser.DisableImage = global::LEA_Browser.Properties.Resources.plus22_disabled11;
-            this.buttonImageBoxEditChooser.Enabled = false;
-            this.buttonImageBoxEditChooser.EnableImage = global::LEA_Browser.Properties.Resources.plus221;
-            this.buttonImageBoxEditChooser.Image = global::LEA_Browser.Properties.Resources.plus22_disabled11;
-            this.buttonImageBoxEditChooser.Location = new System.Drawing.Point(531, 4);
-            this.buttonImageBoxEditChooser.Name = "buttonImageBoxEditChooser";
-            this.buttonImageBoxEditChooser.Size = new System.Drawing.Size(32, 27);
-            this.buttonImageBoxEditChooser.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            this.buttonImageBoxEditChooser.TabIndex = 6;
-            this.buttonImageBoxEditChooser.TabStop = false;
-            this.buttonImageBoxEditChooser.Click += new System.EventHandler(this.buttonImageBoxEditChooser_Click);
-            // 
-            // buttonImageBoxDelete
-            // 
-            this.buttonImageBoxDelete.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.buttonImageBoxDelete.DisableImage = global::LEA_Browser.Properties.Resources.trash22_disabled1;
-            this.buttonImageBoxDelete.Enabled = false;
-            this.buttonImageBoxDelete.EnableImage = global::LEA_Browser.Properties.Resources.trash22;
-            this.buttonImageBoxDelete.Image = global::LEA_Browser.Properties.Resources.trash22_disabled1;
-            this.buttonImageBoxDelete.Location = new System.Drawing.Point(3, 4);
-            this.buttonImageBoxDelete.Name = "buttonImageBoxDelete";
-            this.buttonImageBoxDelete.Size = new System.Drawing.Size(43, 27);
-            this.buttonImageBoxDelete.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            this.buttonImageBoxDelete.TabIndex = 4;
-            this.buttonImageBoxDelete.TabStop = false;
-            this.buttonImageBoxDelete.Click += new System.EventHandler(this.buttonImageBoxDelete_Click);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -444,6 +444,11 @@
             this.Resize += new System.EventHandler(this.MainForm_Resize);
             this.TopPanel.ResumeLayout(false);
             this.TopPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.buttonSave)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.buttonRefresh)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.buttonAddRow)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.buttonImageBoxEditChooser)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.buttonImageBoxDelete)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCastle)).EndInit();
             this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewProduct)).EndInit();
@@ -452,6 +457,8 @@
             this.panel6.ResumeLayout(false);
             this.panel6.PerformLayout();
             this.panel5.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.buttonImageBoxGetFolder)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.buttonPlay)).EndInit();
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
@@ -461,13 +468,6 @@
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.buttonImageBoxGetFolder)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.buttonPlay)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.buttonSave)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.buttonRefresh)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.buttonAddRow)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.buttonImageBoxEditChooser)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.buttonImageBoxDelete)).EndInit();
             this.ResumeLayout(false);
 
         }

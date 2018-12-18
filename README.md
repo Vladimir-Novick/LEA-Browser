@@ -1,7 +1,16 @@
 # LEA-Browser
 Law Enforcement Agency Browser.
 
-C# Windows Forms Application
+Example C# Windows Forms Application with DataGridView control.
+
+#### Features:
+* Add Combobox cell in DataGridView.
+* Add Image cell in DataGridView.
+* Show Combobox when DataGridView cell being edited.
+* Modify hidden cell when combobox is selected.
+* Show image to DataGridView cell if another cell is modified.
+* Asynchronous read and write to Microsoft SQL Server without Entity Framework.
+* Using multithreading background operations.
 
 Database: Microsoft SQL Server. 
     Backup file: DB/LEA_SqlServerDB.bak

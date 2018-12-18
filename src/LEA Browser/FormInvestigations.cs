@@ -23,8 +23,7 @@ namespace LEA.Browser
         {
             if (dataGridViewInvestigations.IsCurrentCellDirty)
             {
-          //     var dgw = (DataGridView)sender;
-           //     dgw.CommitEdit(DataGridViewDataErrorContexts.Commit);
+
 
             }
 
