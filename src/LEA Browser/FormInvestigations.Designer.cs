@@ -33,18 +33,18 @@ namespace LEA.Browser
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormInvestigations));
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.dataGridViewInvestigations = new System.Windows.Forms.DataGridView();
-            this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.buttonSave = new LEA_Browser.ButtonImageBox();
             this.buttonRefresh = new LEA_Browser.ButtonImageBox();
             this.buttonAddRow = new LEA_Browser.ButtonImageBox();
             this.buttonImageBoxDelete = new LEA_Browser.ButtonImageBox();
+            this.dataGridViewInvestigations = new System.Windows.Forms.DataGridView();
+            this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.panel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewInvestigations)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.buttonSave)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.buttonRefresh)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.buttonAddRow)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.buttonImageBoxDelete)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewInvestigations)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
@@ -68,30 +68,6 @@ namespace LEA.Browser
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(459, 30);
             this.panel2.TabIndex = 1;
-            // 
-            // dataGridViewInvestigations
-            // 
-            this.dataGridViewInvestigations.AllowUserToAddRows = false;
-            this.dataGridViewInvestigations.BackgroundColor = System.Drawing.Color.WhiteSmoke;
-            this.dataGridViewInvestigations.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewInvestigations.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridViewInvestigations.Location = new System.Drawing.Point(0, 30);
-            this.dataGridViewInvestigations.Name = "dataGridViewInvestigations";
-            this.dataGridViewInvestigations.ReadOnly = true;
-            this.dataGridViewInvestigations.RowTemplate.ReadOnly = true;
-            this.dataGridViewInvestigations.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewInvestigations.Size = new System.Drawing.Size(459, 303);
-            this.dataGridViewInvestigations.TabIndex = 2;
-            this.dataGridViewInvestigations.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.dataGridViewInvestigations_CellBeginEdit);
-            this.dataGridViewInvestigations.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewInvestigations_CellEndEdit);
-            this.dataGridViewInvestigations.CurrentCellDirtyStateChanged += new System.EventHandler(this.dataGridViewPInvestigations_CurrentCellDirtyStateChanged);
-            this.dataGridViewInvestigations.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.dataGridViewInvestigations_EditingControlShowing);
-            this.dataGridViewInvestigations.SelectionChanged += new System.EventHandler(this.dataGridViewInvestigations_SelectionChanged);
-            // 
-            // backgroundWorker
-            // 
-            this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_DoWork);
-            this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_RunWorkerCompleted);
             // 
             // buttonSave
             // 
@@ -153,6 +129,30 @@ namespace LEA.Browser
             this.buttonImageBoxDelete.TabStop = false;
             this.buttonImageBoxDelete.Click += new System.EventHandler(this.buttonImageBoxDelete_Click);
             // 
+            // dataGridViewInvestigations
+            // 
+            this.dataGridViewInvestigations.AllowUserToAddRows = false;
+            this.dataGridViewInvestigations.BackgroundColor = System.Drawing.Color.WhiteSmoke;
+            this.dataGridViewInvestigations.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewInvestigations.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridViewInvestigations.Location = new System.Drawing.Point(0, 30);
+            this.dataGridViewInvestigations.Name = "dataGridViewInvestigations";
+            this.dataGridViewInvestigations.ReadOnly = true;
+            this.dataGridViewInvestigations.RowTemplate.ReadOnly = true;
+            this.dataGridViewInvestigations.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridViewInvestigations.Size = new System.Drawing.Size(459, 303);
+            this.dataGridViewInvestigations.TabIndex = 2;
+            this.dataGridViewInvestigations.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewInvestigations_CellEndEdit);
+            this.dataGridViewInvestigations.CurrentCellDirtyStateChanged += new System.EventHandler(this.dataGridViewPInvestigations_CurrentCellDirtyStateChanged);
+            this.dataGridViewInvestigations.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dataGridViewInvestigations_DataError);
+            this.dataGridViewInvestigations.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.dataGridViewInvestigations_EditingControlShowing);
+            this.dataGridViewInvestigations.SelectionChanged += new System.EventHandler(this.dataGridViewInvestigations_SelectionChanged);
+            // 
+            // backgroundWorker
+            // 
+            this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_DoWork);
+            this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_RunWorkerCompleted);
+            // 
             // FormInvestigations
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -170,11 +170,11 @@ namespace LEA.Browser
             this.Text = "Investigations";
             this.Load += new System.EventHandler(this.FormInvestigations_Load);
             this.panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewInvestigations)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.buttonSave)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.buttonRefresh)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.buttonAddRow)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.buttonImageBoxDelete)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewInvestigations)).EndInit();
             this.ResumeLayout(false);
 
         }

@@ -454,11 +454,11 @@ namespace LEA.Browser
 
                 case AppConstants.CallRecordTypeCallID:
 
-                    GetVoiceRecord(productItem);
+                    GetVoiceRecordAsync(productItem);
                     break;
 
                 case AppConstants.CallRecordTypeSmsID:
-                    GetSmsRecord(productItem);
+                    GetSmsRecordAsync(productItem);
                     break;
 
             }
@@ -467,7 +467,7 @@ namespace LEA.Browser
 
         }
 
-        private void GetVoiceRecord(ProductItem productItem)
+        private void GetVoiceRecordAsync(ProductItem productItem)
         {
             #region create task for VoiceRecord
 
@@ -493,7 +493,7 @@ namespace LEA.Browser
         }
 
         #region get SmsRecord
-        private void GetSmsRecord(ProductItem productItem)
+        private void GetSmsRecordAsync(ProductItem productItem)
         {
 
 

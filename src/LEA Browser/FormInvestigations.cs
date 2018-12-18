@@ -23,7 +23,8 @@ namespace LEA.Browser
         {
             if (dataGridViewInvestigations.IsCurrentCellDirty)
             {
-                dataGridViewInvestigations.CommitEdit(DataGridViewDataErrorContexts.Commit);
+          //     var dgw = (DataGridView)sender;
+           //     dgw.CommitEdit(DataGridViewDataErrorContexts.Commit);
 
             }
 
@@ -39,7 +40,7 @@ namespace LEA.Browser
 
             dataGridViewInvestigations.Columns["id"].Visible = false;
 
-            dataGridViewInvestigations.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            dataGridViewInvestigations.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dataGridViewInvestigations.AllowUserToAddRows = false;
 
 
@@ -182,17 +183,15 @@ namespace LEA.Browser
         private void dataGridViewInvestigations_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
             dataGridViewInvestigations.BindingContext[dataGridViewInvestigations.DataSource].EndCurrentEdit();
+            dataGridViewInvestigations.EndEdit();
         }
 
-        private void dataGridViewInvestigations_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
-        {
-
-        }
 
         private void dataGridViewInvestigations_SelectionChanged(object sender, EventArgs e)
         {
             SaveInvestigationRow();
         }
+
 
         private void buttonAddRow_Click(object sender, EventArgs e)
         {
@@ -243,6 +242,11 @@ namespace LEA.Browser
                 }
 
             }
+        }
+
+        private void dataGridViewInvestigations_DataError(object sender, DataGridViewDataErrorEventArgs anError)
+        {
+            MessageBox.Show("Error happened " + anError.Context.ToString());
         }
     }
 }
