@@ -10,9 +10,11 @@ Example C# Windows Forms Application with DataGridView control.
 * Modify hidden cell when combobox is selected.
 * Show image to DataGridView cell if another cell is modified.
 * Asynchronous read and write to Microsoft SQL Server without Entity Framework.
-* Used multithreading background operations.
-* Used ConcurrentDictionary class as taskpool for asynchronous operation.
-* Used BackgroundWorker control.
+* Uses :
+   * multithreading background operations.
+   * ConcurrentDictionary class as taskpool for asynchronous operation.
+   * BackgroundWorker control.
+   * Database Triggers and Storege procedures.
 
 Database: Microsoft SQL Server. 
     Backup file: DB/LEA_SqlServerDB.bak
