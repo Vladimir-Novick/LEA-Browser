@@ -14,7 +14,7 @@ Example C# Windows Forms Application with DataGridView control.
    * multithreading background operations.
    * ConcurrentDictionary class as taskpool for asynchronous operation.
    * BackgroundWorker control.
-   * Database Triggers and Storege procedures.
+   * Database Triggers and Storage procedures.
 
 Database: Microsoft SQL Server. 
     Backup file: DB/LEA_SqlServerDB.bak
