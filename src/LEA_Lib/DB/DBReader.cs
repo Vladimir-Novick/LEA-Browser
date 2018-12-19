@@ -49,6 +49,25 @@ namespace LEA.Lib.DB
             }
         }
 
+        private static void ExecuteNonQuery(string connetionString, string sql)
+        {
+            try
+            {
+                using (var sqlConnection = new SqlConnection(connetionString))
+                {
+                    sqlConnection.Open();
+
+                    using (var sqlCommand = new SqlCommand(sql, sqlConnection))
+                    {
+                        sqlCommand.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
 
         public BindingList<ProductItem> ProductGet(SelectProductParamItems param)
         {
@@ -65,7 +84,6 @@ namespace LEA.Lib.DB
             String sql = $"exec sp_AddProduct @InvestigationId = {investigationId};";
             string connetionString = ConfigUtils.GetConfig()[AppConstants.ConnectionString];
             ReadListFromDatabase(productItems, ProductReadItems, connetionString, sql);
-
             if (productItems.Count > 0)
             {
                 return productItems;
@@ -74,7 +92,7 @@ namespace LEA.Lib.DB
         }
 
 
-        public void ProductDeleteCreateTask(List<int> rows)
+        public void ProductDeleteAsync(List<int> rows)
         {
             Task task = new Task(ProductDeleteAction, rows);
             String key = rows.ToKey();
@@ -143,7 +161,7 @@ namespace LEA.Lib.DB
             return true;
         }
 
-        public void ProductUpdateCreateTask(ProductItem productItem)
+        public void ProductUpdateAsync(ProductItem productItem)
         {
             Task task = new Task(ProductUpdateAction, productItem);
             String key = "UpdateProductRecord:" + productItem.Id.ToString();
@@ -162,30 +180,17 @@ namespace LEA.Lib.DB
         Action<object> ProductUpdateAction = (object obj) =>
         {
             ProductItem productItem = obj as ProductItem;
-            if (productItem == null) return;
-            try
-            {
-                string connetionString = ConfigUtils.GetConfig()[AppConstants.ConnectionString];
-
-                using (var sqlConnection = new SqlConnection(connetionString))
-                {
-                    sqlConnection.Open();
-                    String sql = $@"UPDATE [dbo].[Product]
+            String sql = $@"UPDATE [dbo].[Product]
                                       SET [Type] = {productItem.Type}
                                       ,[Source] = '{productItem.Source?.Replace("'", "''")}'
                                       ,[Destination] = '{productItem.Destination?.Replace("'", "''")}'
                                       ,[InvestigationId] = {productItem.InvestigationId}
                                    WHERE Id = {productItem.Id}";
-                    using (var sqlCommand = new SqlCommand(sql, sqlConnection))
-                    {
-                        sqlCommand.ExecuteNonQuery();
-                    }
-                }
-            }
-            catch (Exception)
-            {
+            string connetionString = ConfigUtils.GetConfig()[AppConstants.ConnectionString];
 
-            }
+            if (productItem == null) return;
+
+            ExecuteNonQuery(connetionString, sql);
         };
 
 
@@ -200,10 +205,6 @@ namespace LEA.Lib.DB
             return investigations;
         }
 
-
-
-
-
         private static bool InvestigationReadItems(Object obj, SqlDataReader sqlDataReader)
         {
             List<InvestigationItem> investigations = obj as List<InvestigationItem>;
@@ -215,7 +216,7 @@ namespace LEA.Lib.DB
             return true;
         }
 
-        public void InvestigationUpdateCreateTask(InvestigationItem investigationItem)
+        public void InvestigationUpdateAsync(InvestigationItem investigationItem)
         {
             Task task = new Task(investigationUpdateAction, investigationItem);
             String key = "UpdateInvestigationRecord:" + investigationItem.id.ToString();
@@ -233,26 +234,14 @@ namespace LEA.Lib.DB
         {
             InvestigationItem investigationItem = obj as InvestigationItem;
             if (investigationItem == null) return;
-            try
-            {
-                string connetionString = ConfigUtils.GetConfig()[AppConstants.ConnectionString];
 
-                using (var sqlConnection = new SqlConnection(connetionString))
-                {
-                    sqlConnection.Open();
-                    String sql = $@"UPDATE [dbo].[Investigation]
-       SET [Name] ='{investigationItem.Name}'
-        WHERE  [id] = {investigationItem.id}";
-                    using (var sqlCommand = new SqlCommand(sql, sqlConnection))
-                    {
-                        sqlCommand.ExecuteNonQuery();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+            string connetionString = ConfigUtils.GetConfig()[AppConstants.ConnectionString];
+            String sql = $@"UPDATE [dbo].[Investigation]
+                             SET [Name] ='{investigationItem.Name}'
+                            WHERE  [id] = {investigationItem.id}";
+            ExecuteNonQuery(connetionString, sql);
+
+
         };
 
         public InvestigationItem InvestigationAdd()
@@ -265,7 +254,7 @@ namespace LEA.Lib.DB
             return null;
         }
 
-        public void InvestigationDeleteCreateTask(List<int> rows)
+        public void InvestigationDeleteAsync(List<int> rows)
         {
             Task task = new Task(InvestigationDeleteAction, rows);
             String key = "deleteInvestigation: "+ rows.ToKey();
@@ -335,7 +324,7 @@ namespace LEA.Lib.DB
             return true;
         }
 
-        public void VoiceUpdateCreateTask(VoiceCallItem voiceCallItem)
+        public void VoiceUpdateAsync(VoiceCallItem voiceCallItem)
         {
             Task task = new Task(VoiceUpdateAction, voiceCallItem);
             String key = "UpdateVoiceCallItemRecor:" + voiceCallItem.ProductId.ToString();
@@ -354,27 +343,16 @@ namespace LEA.Lib.DB
         {
             VoiceCallItem voiceCallItem = obj as VoiceCallItem;
             string connetionString = ConfigUtils.GetConfig()[AppConstants.ConnectionString];
-
-            if (voiceCallItem == null) return;
-            try
-            {
-                using (var sqlConnection = new SqlConnection(connetionString))
-                {
-                    sqlConnection.Open();
-                    String sql = $@"UPDATE [dbo].[VoiceCall]
+            String sql = $@"UPDATE [dbo].[VoiceCall]
                                  SET [Path] = '{(voiceCallItem.Path?.ToString() ?? "").Replace("'", "''")}'
                                  WHERE [ProductId] = {voiceCallItem.ProductId}";
-                    using (var sqlCommand = new SqlCommand(sql, sqlConnection))
-                    {
-                        sqlCommand.ExecuteNonQuery();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+
+
+            if (voiceCallItem == null) return;
+            ExecuteNonQuery(connetionString, sql);
         };
+
+
 
 
         #region  SmsMessage operation
@@ -407,7 +385,7 @@ namespace LEA.Lib.DB
         }
 
 
-        public void SmsUpdateCreateTask(SmsMessageItem smsMessageItem)
+        public void SmsUpdateAsync(SmsMessageItem smsMessageItem)
         {
             Task task = new Task(SmsUpdateAction, smsMessageItem);
             String key = "UpdateSmsMessageRecord:" + smsMessageItem.ProductID.ToString();

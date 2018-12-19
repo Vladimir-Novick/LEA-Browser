@@ -150,7 +150,7 @@ namespace LEA.Browser
                 InvestigationItem investigationItem = dataGridViewInvestigations.Rows[rowModifiedIndex]?.DataBoundItem as InvestigationItem;
                 if (investigationItem != null)
                 {
-                    (new DBReader()).InvestigationUpdateCreateTask((InvestigationItem)investigationItem.Clone());
+                    (new DBReader()).InvestigationUpdateAsync((InvestigationItem)investigationItem.Clone());
 
                 }
                 rowModifiedIndex = -1;
@@ -233,7 +233,7 @@ namespace LEA.Browser
                 }
 
                 DBReader dBReader = new DBReader();
-                dBReader.InvestigationDeleteCreateTask(rows);
+                dBReader.InvestigationDeleteAsync(rows);
 
                 foreach (DataGridViewRow item in dataGridViewInvestigations.SelectedRows)
                 {

@@ -342,7 +342,7 @@ namespace LEA.Browser
                 }
 
                 DBReader dBReader = new DBReader();
-                dBReader.ProductDeleteCreateTask(rows);
+                dBReader.ProductDeleteAsync(rows);
 
                 foreach (DataGridViewRow item in dataGridViewProduct.SelectedRows)
                 {
@@ -474,7 +474,7 @@ namespace LEA.Browser
                 ProductItem productItem = dataGridViewProduct.Rows[rowModifiedIndex]?.DataBoundItem as ProductItem;
                 if (productItem != null)
                 {
-                    (new DBReader()).ProductUpdateCreateTask((ProductItem)productItem.Clone());
+                    (new DBReader()).ProductUpdateAsync((ProductItem)productItem.Clone());
 
                 }
                 rowModifiedIndex = -1;
@@ -656,7 +656,7 @@ namespace LEA.Browser
                 SmsMessageItem smsMessageItem = new SmsMessageItem() { ProductID = currentProductID, Text = newsmsText };
 
                 currentProductID = -1;
-                (new DBReader()).SmsUpdateCreateTask(smsMessageItem);
+                (new DBReader()).SmsUpdateAsync(smsMessageItem);
             }
         }
 
@@ -689,7 +689,7 @@ namespace LEA.Browser
                 VoiceCallItem voiceCallItemArg = new VoiceCallItem() { ProductId = currentProductID, Path = voicePathText };
 
                 currentProductID = -1;
-                (new DBReader()).VoiceUpdateCreateTask(voiceCallItemArg);
+                (new DBReader()).VoiceUpdateAsync(voiceCallItemArg);
             }
         }
 
