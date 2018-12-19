@@ -12,7 +12,7 @@ Example C# Windows Forms Application with DataGridView control.
 * Asynchronous read and write to Microsoft SQL Server without Entity Framework.
 * Uses :
    * multithreading background operations.
-   * ConcurrentDictionary class as taskpool for asynchronous operation.
+   * Custom TaskPool class for multithreading asynchronous operation.
    * BackgroundWorker control.
    * Database Triggers and Storage procedures.
 

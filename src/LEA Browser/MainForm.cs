@@ -1,6 +1,7 @@
 ﻿using LEA.Lib;
 using LEA.Lib.DB;
 using LEA.Lib.Model;
+using LEA.Lib.Tasks;
 using LEA_Lib;
 using System;
 using System.Collections.Generic;
@@ -521,24 +522,22 @@ namespace LEA.Browser
         private void GetVoiceRecordAsync(ProductItem productItem)
         {
             #region create task for VoiceRecord
-
-            Task<VoiceCallItem> task = new Task<VoiceCallItem>(() =>
+            MainForm form = this;
+            Task task = new Task(() =>
             {
-
-                return (new DBReader()).VoiceGetAction(productItem);
+                try
+                {
+                    var t = (new DBReader()).VoiceGetAction(productItem);
+                    ThreadHelper.SetText(form, textBoxFilePath, t.Path);
+                } catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
             });
 
             String key = "GetVoiceRecord:" + productItem.Id.ToString();
-            task.ContinueWith(t =>
-            {
-                ThreadHelper.SetText(this, textBoxFilePath, t.Result.Path);
-                DBReader.threadPool.TryRemove(key, out Task oldItem);
+            TaskPool.AddToQueue(key, task);
 
-            });
-
-
-            DBReader.threadPool.TryAdd(key, task);
-            task.Start();
 
             #endregion
         }
@@ -546,29 +545,16 @@ namespace LEA.Browser
         #region get SmsRecord
         private void GetSmsRecordAsync(ProductItem productItem)
         {
+            MainForm form = this;
 
-
-            Task<SmsMessageItem> taskSMS = new Task<SmsMessageItem>(() =>
+            Task taskSMS = new Task(() =>
             {
-
-                return (new DBReader()).SmsGetRecorddAction(productItem);
+                var t =  (new DBReader()).SmsGetRecorddAction(productItem);
+                ThreadHelper.SetText(form, textBoxSMSText, t.Text);
             });
 
             String keySMS = "GetSMSRecord:" + productItem.Id.ToString() + GetTimestamp(DateTime.Now);
-
-            taskSMS.ContinueWith(t =>
-            {
-                ThreadHelper.SetText(this, textBoxSMSText, t.Result.Text);
-                DBReader.threadPool.TryRemove(keySMS, out Task oldItem);
-
-            });
-
-
-
-            DBReader.threadPool.TryAdd(keySMS, taskSMS);
-            taskSMS.Start();
-
-
+            TaskPool.AddToQueue(keySMS, taskSMS);
         }
 
         #endregion

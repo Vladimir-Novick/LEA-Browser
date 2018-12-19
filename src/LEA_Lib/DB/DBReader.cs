@@ -1,7 +1,7 @@
 ﻿using LEA.Lib.Model;
+using LEA.Lib.Tasks;
 using LEA_Lib;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data.SqlClient;
@@ -9,9 +9,16 @@ using System.Threading.Tasks;
 
 namespace LEA.Lib.DB
 {
+    /*
+     * 
+     *  Copyright (C) 2018 by Vladimir Novick http://www.linkedin.com/in/vladimirnovick , 
+     *
+     * vlad.novick@gmail.com , http://www.sgcombo.com , https://github.com/Vladimir-Novick	
+     *
+     * 
+    */
     public class DBReader
     {
-        public static ConcurrentDictionary<String, Task> threadPool = new ConcurrentDictionary<String, Task>();
 
 
         public void GetUserName(out String UserName, out String Password)
@@ -96,14 +103,7 @@ namespace LEA.Lib.DB
         {
             Task task = new Task(ProductDeleteAction, rows);
             String key = rows.ToKey();
-            threadPool.TryAdd(key, task);
-            task.ContinueWith(t =>
-            {
-
-                DBReader.threadPool.TryRemove(key, out Task oldItem);
-
-            });
-            task.Start();
+            TaskPool.Add(key, task);
         }
 
         Action<object> ProductDeleteAction = (object obj) =>
@@ -131,7 +131,7 @@ namespace LEA.Lib.DB
 
             }
 
-            threadPool.TryRemove(key, out Task deleted);
+
         };
 
         internal static bool ProductReadItems(Object obj, SqlDataReader sqlDataReader)
@@ -165,14 +165,7 @@ namespace LEA.Lib.DB
         {
             Task task = new Task(ProductUpdateAction, productItem);
             String key = "UpdateProductRecord:" + productItem.Id.ToString();
-            threadPool.TryAdd(key, task);
-            task.ContinueWith(t =>
-            {
-
-                DBReader.threadPool.TryRemove(key, out Task oldItem);
-
-            });
-            task.Start();
+            TaskPool.AddToQueue(key, task);
         }
 
 
@@ -220,14 +213,7 @@ namespace LEA.Lib.DB
         {
             Task task = new Task(investigationUpdateAction, investigationItem);
             String key = "UpdateInvestigationRecord:" + investigationItem.id.ToString();
-            threadPool.TryAdd(key, task);
-            task.ContinueWith(t =>
-            {
-
-                DBReader.threadPool.TryRemove(key, out Task oldItem);
-
-            });
-            task.Start();
+            TaskPool.AddToQueue(key, task);
         }
 
         Action<object> investigationUpdateAction = (object obj) =>
@@ -246,7 +232,7 @@ namespace LEA.Lib.DB
 
         public InvestigationItem InvestigationAdd()
         {
-            List<InvestigationItem> investigations = new List<InvestigationItem>() ;
+            List<InvestigationItem> investigations = new List<InvestigationItem>();
             String sql = $"exec sp_AddInvestigation ;";
             string connetionString = ConfigUtils.GetConfig()[AppConstants.ConnectionString];
             ReadListFromDatabase(investigations, InvestigationReadItems, connetionString, sql);
@@ -257,15 +243,8 @@ namespace LEA.Lib.DB
         public void InvestigationDeleteAsync(List<int> rows)
         {
             Task task = new Task(InvestigationDeleteAction, rows);
-            String key = "deleteInvestigation: "+ rows.ToKey();
-            threadPool.TryAdd(key, task);
-            task.ContinueWith(t =>
-            {
-
-                DBReader.threadPool.TryRemove(key, out Task oldItem);
-
-            });
-            task.Start();
+            String key = "deleteInvestigation: " + rows.ToKey();
+            TaskPool.Add(key, task);
         }
 
         Action<object> InvestigationDeleteAction = (object obj) =>
@@ -293,9 +272,9 @@ namespace LEA.Lib.DB
                 Console.WriteLine(ex.Message);
             }
 
-           
+
         };
- 
+
         public VoiceCallItem VoiceGetAction(ProductItem productItem)
         {
             if (productItem == null) return null;
@@ -307,8 +286,9 @@ namespace LEA.Lib.DB
             List<VoiceCallItem> voiceCallItems = new List<VoiceCallItem>();
             ReadListFromDatabase(voiceCallItems, VoiceReadItems, connetionString, sql);
 
-            if (voiceCallItems.Count == 0) {
-               return new VoiceCallItem() { Path = "Empty", ProductId = productItem.Id };
+            if (voiceCallItems.Count == 0)
+            {
+                return new VoiceCallItem() { Path = "Empty", ProductId = productItem.Id };
             }
             return voiceCallItems[0];
 
@@ -328,14 +308,7 @@ namespace LEA.Lib.DB
         {
             Task task = new Task(VoiceUpdateAction, voiceCallItem);
             String key = "UpdateVoiceCallItemRecor:" + voiceCallItem.ProductId.ToString();
-            threadPool.TryAdd(key, task);
-            task.ContinueWith(t =>
-            {
-
-                DBReader.threadPool.TryRemove(key, out Task oldItem);
-
-            });
-            task.Start();
+            TaskPool.AddToQueue(key, task);
         }
 
 
@@ -369,7 +342,7 @@ namespace LEA.Lib.DB
             ReadListFromDatabase(smsMessageItems, SmsReadItem, connetionString, sql);
 
             if (smsMessageItems.Count > 0)
-            return smsMessageItems[0];
+                return smsMessageItems[0];
             return new SmsMessageItem() { ProductID = productItem.Id, Text = "Empty" };
 
         }
@@ -389,14 +362,7 @@ namespace LEA.Lib.DB
         {
             Task task = new Task(SmsUpdateAction, smsMessageItem);
             String key = "UpdateSmsMessageRecord:" + smsMessageItem.ProductID.ToString();
-            threadPool.TryAdd(key, task);
-            task.ContinueWith(t =>
-            {
-
-                DBReader.threadPool.TryRemove(key, out Task oldItem);
-
-            });
-            task.Start();
+            TaskPool.AddToQueue(key, task);
         }
 
 

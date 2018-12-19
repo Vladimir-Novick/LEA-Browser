@@ -46,6 +46,7 @@
     <Compile Include="ConfigUtils.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="DB\DBReader.cs" />
+    <Compile Include="Tasks\TaskStackItem.cs" />
     <Compile Include="Exceptions\ConfigException.cs" />
     <Compile Include="LEAExtentions.cs" />
     <Compile Include="Model\SelectProductParamItems.cs" />
@@ -54,6 +55,7 @@
     <Compile Include="Model\InvestigationItem.cs" />
     <Compile Include="Model\ProductItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tasks\TaskPool.cs" />
     <Compile Include="ThreadHelper.cs" />
   </ItemGroup>
   <ItemGroup />
