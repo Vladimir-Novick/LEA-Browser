@@ -46,7 +46,7 @@
     <Compile Include="ConfigUtils.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="DB\DBReader.cs" />
-    <Compile Include="Tasks\TaskStackItem.cs" />
+    <Compile Include="Tasks\QueueByKey.cs" />
     <Compile Include="Exceptions\ConfigException.cs" />
     <Compile Include="LEAExtentions.cs" />
     <Compile Include="Model\SelectProductParamItems.cs" />

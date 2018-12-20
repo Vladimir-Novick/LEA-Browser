@@ -275,20 +275,20 @@ namespace LEA.Lib.DB
 
         };
 
-        public VoiceCallItem VoiceGetAction(ProductItem productItem)
+        public VoiceCallItem VoiceGetAction(int rowID)
         {
-            if (productItem == null) return null;
+           
 
             String sql = $@"SELECT [Path],[ProductId]
                                     FROM[dbo].[VoiceCall]
-                                    where ProductId = {productItem.Id}";
+                                    where ProductId = {rowID}";
             string connetionString = ConfigUtils.GetConfig()[AppConstants.ConnectionString];
             List<VoiceCallItem> voiceCallItems = new List<VoiceCallItem>();
             ReadListFromDatabase(voiceCallItems, VoiceReadItems, connetionString, sql);
 
             if (voiceCallItems.Count == 0)
             {
-                return new VoiceCallItem() { Path = "Empty", ProductId = productItem.Id };
+                return new VoiceCallItem() { Path = "Empty", ProductId = rowID };
             }
             return voiceCallItems[0];
 
@@ -330,20 +330,20 @@ namespace LEA.Lib.DB
 
         #region  SmsMessage operation
 
-        public SmsMessageItem SmsGetRecorddAction(ProductItem productItem)
+        public SmsMessageItem SmsGetRecorddAction(int rowID)
         {
-            if (productItem == null) return null;
+
             string connetionString = ConfigUtils.GetConfig()[AppConstants.ConnectionString];
             String sql = $@"SELECT [Text],[ProductId]
                                     FROM[dbo].[SmsMessage]
-                                    where ProductId = {productItem.Id}";
+                                    where ProductId = {rowID}";
 
             List<SmsMessageItem> smsMessageItems = new List<SmsMessageItem>();
             ReadListFromDatabase(smsMessageItems, SmsReadItem, connetionString, sql);
 
             if (smsMessageItems.Count > 0)
                 return smsMessageItems[0];
-            return new SmsMessageItem() { ProductID = productItem.Id, Text = "Empty" };
+            return new SmsMessageItem() { ProductID = rowID, Text = "Empty" };
 
         }
 

@@ -498,6 +498,8 @@ namespace LEA.Browser
         {
             ProductItem productItem = dataGridViewProduct.Rows[e.RowIndex].DataBoundItem as ProductItem;
 
+            int rowID = productItem.Id;
+
             textBoxSMSText.Text = "";
             textBoxFilePath.Text = "";
 
@@ -506,11 +508,11 @@ namespace LEA.Browser
 
                 case AppConstants.CallRecordTypeCallID:
 
-                    GetVoiceRecordAsync(productItem);
+                    GetVoiceRecordAsync(rowID);
                     break;
 
                 case AppConstants.CallRecordTypeSmsID:
-                    GetSmsRecordAsync(productItem);
+                    GetSmsRecordAsync(rowID);
                     break;
 
             }
@@ -519,7 +521,7 @@ namespace LEA.Browser
 
         }
 
-        private void GetVoiceRecordAsync(ProductItem productItem)
+        private void GetVoiceRecordAsync(int rowID)
         {
             #region create task for VoiceRecord
             MainForm form = this;
@@ -527,7 +529,7 @@ namespace LEA.Browser
             {
                 try
                 {
-                    var t = (new DBReader()).VoiceGetAction(productItem);
+                    var t = (new DBReader()).VoiceGetAction(rowID);
                     ThreadHelper.SetText(form, textBoxFilePath, t.Path);
                 } catch (Exception ex)
                 {
@@ -535,7 +537,7 @@ namespace LEA.Browser
                 }
             });
 
-            String key = "GetVoiceRecord:" + productItem.Id.ToString();
+            String key = "GetVoiceRecord:" + rowID.ToString();
             TaskPool.AddToQueue(key, task);
 
 
@@ -543,17 +545,17 @@ namespace LEA.Browser
         }
 
         #region get SmsRecord
-        private void GetSmsRecordAsync(ProductItem productItem)
+        private void GetSmsRecordAsync(int rowID)
         {
             MainForm form = this;
 
             Task taskSMS = new Task(() =>
             {
-                var t =  (new DBReader()).SmsGetRecorddAction(productItem);
+                var t =  (new DBReader()).SmsGetRecorddAction(rowID);
                 ThreadHelper.SetText(form, textBoxSMSText, t.Text);
             });
 
-            String keySMS = "GetSMSRecord:" + productItem.Id.ToString() + GetTimestamp(DateTime.Now);
+            String keySMS = "GetSMSRecord:" + rowID.ToString() + GetTimestamp(DateTime.Now);
             TaskPool.AddToQueue(keySMS, taskSMS);
         }
 

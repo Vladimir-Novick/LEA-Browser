@@ -21,7 +21,7 @@ namespace LEA.Lib.Tasks
 
         private static readonly Object locker = new Object();
 
-        private static List<TaskStackItem> stack = new List<TaskStackItem>();
+        private static QueueByKey<Task> queueByKey = new QueueByKey<Task>();
 
         private static double getTimespan()
         {
@@ -50,13 +50,11 @@ namespace LEA.Lib.Tasks
                 {
                     threadPool.TryRemove(key, out Task oldItem);
 
-                    var item = (from x in stack where x.taskKey == key select x)
-                       ?.OrderBy(x => x.timestamp)?.FirstOrDefault();
+                    var item = queueByKey.Dequeue(key);
                     if (item != null)
                     {
-                        stack.Remove(item);
-                        bool ok = threadPool.TryAdd(item.taskKey, item.task);
-                        item.task.Start();
+                        bool ok = threadPool.TryAdd(key, task);
+                        task.Start();
                     }
                 }
 
@@ -67,13 +65,7 @@ namespace LEA.Lib.Tasks
                 bool ok = threadPool.TryAdd(key, task);
                 if (!ok)
                 {
-                    TaskStackItem item = new TaskStackItem()
-                    {
-                        task = task,
-                        taskKey = key,
-                        timestamp = getTimespan()
-                    };
-                    stack.Add(item);
+                    queueByKey.Enqueue(key, task);
                 } else
                 {
                     task.Start();
