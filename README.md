@@ -11,8 +11,9 @@ Example C# Windows Forms Application with DataGridView control.
 * Show image to DataGridView cell if another cell is modified.
 * Asynchronous read and write to Microsoft SQL Server without Entity Framework.
 * Uses :
-   * multithreading background operations.
+   * Multithreading background operations.
    * Custom TaskPool class for multithreading asynchronous operation.
+   * Custom generic queue class with distribution by keys
    * BackgroundWorker control.
    * Database Triggers and Storage procedures.
 
