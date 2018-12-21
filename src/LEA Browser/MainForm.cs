@@ -159,17 +159,19 @@ namespace LEA.Browser
             dataGridViewProduct.Columns["Id"].Visible = false;
             dataGridViewProduct.Columns["InvestigationId"].Visible = false;
             dataGridViewProduct.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            ChangeImageToDataGrid();
+            ChangeRowsToDataGrid();
+         
             SetEnable(true);
 
         }
 
-        internal void ChangeImageToDataGrid()
+
+
+        private void ChangeRowsToDataGrid()
         {
 
             for (int i = 0; i < dataGridViewProduct.Rows.Count; i++)
             {
-                
                 int type = GetRecordType(i);
                 SetImageToRecord(i, type);
             }
@@ -188,6 +190,7 @@ namespace LEA.Browser
 
         internal void SetImageToRecord(int rowIndex, int recordType)
         {
+
             switch (recordType)
             {
                 case AppConstants.CallRecordTypeCallID:
@@ -370,6 +373,7 @@ namespace LEA.Browser
             if (productItems != null)
             {
                 this.productBindingSource.Add(productItems[0]);
+             
             }
         }
 
@@ -491,10 +495,7 @@ namespace LEA.Browser
         private void dataGridViewProduct_RowLeave(object sender, DataGridViewCellEventArgs e)
             => SaveProductRow();
 
-        public static String GetTimestamp(DateTime value)
-        {
-            return value.ToString("yyyyMMddHHmmssffff");
-        }
+
 
         private void dataGridViewProduct_RowEnter(object sender, DataGridViewCellEventArgs e)
         {
@@ -539,7 +540,7 @@ namespace LEA.Browser
                 }
             });
 
-            String key = "GetVoiceRecord:" + rowID.ToString();
+            String key = "GetVoiceRecord:";
             DBReader.taskPool.Push(key, task);
 
 
@@ -557,7 +558,7 @@ namespace LEA.Browser
                 ThreadHelper.SetText(form, textBoxSMSText, t.Text);
             });
 
-            String keySMS = "GetSMSRecord:" + rowID.ToString();
+            String keySMS = "GetSMSRecord:" ;
             DBReader.taskPool.Push(keySMS, taskSMS);
         }
 
@@ -617,21 +618,32 @@ namespace LEA.Browser
 
         private void textBoxSMSText_TextChanged(object sender, EventArgs e)
         {
-            smsUpdate = true;
-            TextBox box = sender as TextBox;
-            newsmsText = box.Text;
-            currentProductID = GetCurrentProductId();
+            try
+            {
+                smsUpdate = true;
+                TextBox box = sender as TextBox;
+                newsmsText = box.Text;
+                currentProductID = GetCurrentProductId();
+            } catch ( Exception)
+            {
+                smsUpdate = false;
+                currentProductID = -1;
+            }
 
         }
 
         private int GetCurrentProductId()
         {
-            int currentIndex = (dataGridViewProduct?.CurrentRow?.Index) ?? -1;
-            if (currentIndex >= 0)
+            try
             {
-                ProductItem productItem = dataGridViewProduct.Rows[currentIndex].DataBoundItem as ProductItem;
-                return productItem.Id;
+                int currentIndex = (dataGridViewProduct?.CurrentRow?.Index) ?? -1;
+                if (currentIndex >= 0)
+                {
+                    ProductItem productItem = dataGridViewProduct.Rows[currentIndex].DataBoundItem as ProductItem;
+                    return productItem.Id;
+                }
             }
+            catch (Exception) { }
             return -1;
 
         }
@@ -640,13 +652,20 @@ namespace LEA.Browser
         {
             if (smsUpdate)
             {
-                smsUpdate = false;
-                if (currentProductID == -1) return;
+                try
+                {
+                    smsUpdate = false;
+                    if (currentProductID == -1) return;
 
-                SmsMessageItem smsMessageItem = new SmsMessageItem() { ProductID = currentProductID, Text = newsmsText };
+                    SmsMessageItem smsMessageItem = new SmsMessageItem() { ProductID = currentProductID, Text = newsmsText };
 
-                currentProductID = -1;
-                (new DBReader()).SmsUpdateAsync(smsMessageItem);
+                    currentProductID = -1;
+                    (new DBReader()).SmsUpdateAsync(smsMessageItem);
+                } catch (Exception)
+                {
+                    smsUpdate = false;
+                    currentProductID = -1;
+                }
             }
         }
 
@@ -688,7 +707,13 @@ namespace LEA.Browser
 
         private void dataGridViewProduct_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
         {
-
+            if (e.RowIndex % 2 == 1)
+            {
+                dataGridViewProduct.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.WhiteSmoke;
+            } else
+            {
+                dataGridViewProduct.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.White;
+            }
         }
     }
 }

@@ -52,8 +52,15 @@ namespace LEA.Lib.Tasks
                     var item = queueByKey.Dequeue(key);
                     if (item != null)
                     {
-                        bool ok = threadPool.TryAdd(key, task);
-                        task.Start();
+                        try
+                        {
+                            task.Start();
+                            bool ok = threadPool.TryAdd(key, task);
+                        } catch (Exception ex)
+                        {
+
+                        } 
+                        
                     }
                 }
 
@@ -61,13 +68,18 @@ namespace LEA.Lib.Tasks
 
             lock (locker)
             {
-                bool ok = threadPool.TryAdd(key, task);
-                if (!ok)
+                if (!threadPool.Values.Contains(task))
                 {
-                    queueByKey.Enqueue(key, task);
-                } else
-                {
-                    task.Start();
+                    bool ok = threadPool.ContainsKey(key);
+                    if (ok)
+                    {
+                        queueByKey.Enqueue(key, task);
+                    }
+                    else
+                    {
+                        threadPool.TryAdd(key, task);
+                        task.Start();
+                    }
                 }
             }
         }

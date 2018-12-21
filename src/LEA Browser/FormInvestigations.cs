@@ -247,5 +247,17 @@ namespace LEA.Browser
         {
             MessageBox.Show("Error happened " + anError.Context.ToString());
         }
+
+        private void dataGridViewInvestigations_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
+        {
+            if (e.RowIndex % 2 == 1)
+            {
+                dataGridViewInvestigations.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.WhiteSmoke;
+            }
+            else
+            {
+                dataGridViewInvestigations.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.White;
+            }
+        }
     }
 }

@@ -146,6 +146,7 @@ namespace LEA.Browser
             this.dataGridViewInvestigations.CurrentCellDirtyStateChanged += new System.EventHandler(this.dataGridViewPInvestigations_CurrentCellDirtyStateChanged);
             this.dataGridViewInvestigations.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dataGridViewInvestigations_DataError);
             this.dataGridViewInvestigations.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.dataGridViewInvestigations_EditingControlShowing);
+            this.dataGridViewInvestigations.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.dataGridViewInvestigations_RowPrePaint);
             this.dataGridViewInvestigations.SelectionChanged += new System.EventHandler(this.dataGridViewInvestigations_SelectionChanged);
             // 
             // backgroundWorker
