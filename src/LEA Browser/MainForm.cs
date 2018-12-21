@@ -19,6 +19,8 @@ namespace LEA.Browser
     {
         public MainForm() => InitializeComponent();
 
+  
+
         private BindingSource productBindingSource = new BindingSource();
 
         private VoiceCallItem voiceCallItem = new VoiceCallItem();
@@ -538,7 +540,7 @@ namespace LEA.Browser
             });
 
             String key = "GetVoiceRecord:" + rowID.ToString();
-            TaskPool.Push(key, task);
+            DBReader.taskPool.Push(key, task);
 
 
             #endregion
@@ -555,8 +557,8 @@ namespace LEA.Browser
                 ThreadHelper.SetText(form, textBoxSMSText, t.Text);
             });
 
-            String keySMS = "GetSMSRecord:" + rowID.ToString() + GetTimestamp(DateTime.Now);
-            TaskPool.Push(keySMS, taskSMS);
+            String keySMS = "GetSMSRecord:" + rowID.ToString();
+            DBReader.taskPool.Push(keySMS, taskSMS);
         }
 
         #endregion

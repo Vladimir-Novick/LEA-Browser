@@ -1,29 +1,28 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace LEA.Lib.Tasks
 {
+    /*
+     * 
+     Copyright (C) 2018 by Vladimir Novick http://www.linkedin.com/in/vladimirnovick , 
 
-    public static class TaskPool
+     vlad.novick@gmail.com , http://www.sgcombo.com , https://github.com/Vladimir-Novick	
+
+     * 
+    */
+    public class TaskPool<TTask> where TTask : Task 
+                                            
     {
-        /*
-         * 
-         Copyright (C) 2018 by Vladimir Novick http://www.linkedin.com/in/vladimirnovick , 
 
-        vlad.novick@gmail.com , http://www.sgcombo.com , https://github.com/Vladimir-Novick	
+        private  ConcurrentDictionary<String, TTask> threadPool = new ConcurrentDictionary<String, TTask>();
 
-         * 
-        */
-        private static ConcurrentDictionary<String, Task> threadPool = new ConcurrentDictionary<String, Task>();
+        private readonly Object locker = new Object();
 
-        private static readonly Object locker = new Object();
+        private  QueueByKey<String, TTask> queueByKey = new QueueByKey<String, TTask>();
 
-        private static QueueByKey<String,Task> queueByKey = new QueueByKey<String,Task>();
-
-        private static double getTimespan()
+        private  double getTimespan()
         {
             return (DateTime.Now - DateTime.MinValue).TotalMilliseconds;
         }
@@ -32,23 +31,23 @@ namespace LEA.Lib.Tasks
         /// </summary>
         /// <param name="key"></param>
         /// <param name="task"></param>
-        public static void Add(String key, Task task)
+        public  void Push(String key, TTask task)
         {
-            TaskPool.Push(key + getTimespan().ToString(), task);
+            PushToQueue(key.ToString() + getTimespan().ToString(), task);
         }
         /// <summary>
         ///   Add asynchronous task to queue by key
         /// </summary>
         /// <param name="key"></param>
         /// <param name="task"></param>
-        public static void Push(String key, Task task)
+        public  void PushToQueue(String key, TTask task)
         {
 
             task.ContinueWith(t =>
             {
                 lock (locker)
                 {
-                    threadPool.TryRemove(key, out Task oldItem);
+                    threadPool.TryRemove(key, out TTask oldItem);
 
                     var item = queueByKey.Dequeue(key);
                     if (item != null)

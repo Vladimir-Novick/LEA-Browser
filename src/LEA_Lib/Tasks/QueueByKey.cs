@@ -4,25 +4,36 @@ using System.Linq;
 
 namespace LEA.Lib.Tasks
 {
+
+ /*
+ * 
+ *  Copyright (C) 2018 by Vladimir Novick http://www.linkedin.com/in/vladimirnovick , 
+ *
+ * vlad.novick@gmail.com , http://www.sgcombo.com , https://github.com/Vladimir-Novick	
+ *
+ * 
+ */
+
+
     /// <summary>
     ///   Represents a first-in, first-out collection of objects by specify key
     ///   Support multitheading operation
     /// </summary>
     /// <typeparam name="TKey"></typeparam>
     /// <typeparam name="TValue"></typeparam>
-    public class QueueByKey<TKey,TValue> where TKey : IEquatable<TKey>
+    public class QueueByKey<TKey, TValue> where TKey : IEquatable<TKey>
     {
 
         private Object lockObject = new Object();
 
-        private class QueueItem<T_Key,T_Value>
+        private class QueueItem<T_Key, T_Value>
         {
             internal T_Key key { get; set; }
             internal double timestamp { get; set; }
             internal T_Value item { get; set; }
         }
 
-        private static List<QueueItem<TKey,TValue>> queueItems = new List<QueueItem<TKey,TValue>>();
+        private List<QueueItem<TKey, TValue>> queueItems = new List<QueueItem<TKey, TValue>>();
 
         private double getTimespan()
         {
@@ -34,10 +45,11 @@ namespace LEA.Lib.Tasks
         /// </summary>
         /// <param name="key"></param>
         /// <param name="obj"></param>
-        public void Enqueue(TKey key,TValue obj){
+        public void Enqueue(TKey key, TValue obj)
+        {
             lock (lockObject)
             {
-                QueueItem<TKey,TValue> itemValue = new QueueItem<TKey,TValue>()
+                QueueItem<TKey, TValue> itemValue = new QueueItem<TKey, TValue>()
                 {
                     key = key,
                     timestamp = getTimespan(),
@@ -66,7 +78,7 @@ namespace LEA.Lib.Tasks
                     return topItem.item;
                 }
             }
-            return  default(TValue); 
+            return default(TValue);
         }
 
         public bool isExist(TKey key)
