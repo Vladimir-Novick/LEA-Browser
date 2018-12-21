@@ -8,20 +8,21 @@ namespace LEA.Lib.Tasks
     ///   Represents a first-in, first-out collection of objects by specify key
     ///   Support multitheading operation
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public class QueueByKey<T> 
+    /// <typeparam name="TKey"></typeparam>
+    /// <typeparam name="TValue"></typeparam>
+    public class QueueByKey<TKey,TValue> where TKey : IEquatable<TKey>
     {
 
         private Object lockObject = new Object();
 
-        private class QueueItem<T_Object>
+        private class QueueItem<T_Key,T_Value>
         {
-            internal String key { get; set; }
+            internal T_Key key { get; set; }
             internal double timestamp { get; set; }
-            internal T_Object item { get; set; }
+            internal T_Value item { get; set; }
         }
 
-        private static List<QueueItem<T>> queueItems = new List<QueueItem<T>>();
+        private static List<QueueItem<TKey,TValue>> queueItems = new List<QueueItem<TKey,TValue>>();
 
         private double getTimespan()
         {
@@ -33,10 +34,10 @@ namespace LEA.Lib.Tasks
         /// </summary>
         /// <param name="key"></param>
         /// <param name="obj"></param>
-        public void Enqueue(String key,T obj){
+        public void Enqueue(TKey key,TValue obj){
             lock (lockObject)
             {
-                QueueItem<T> itemValue = new QueueItem<T>()
+                QueueItem<TKey,TValue> itemValue = new QueueItem<TKey,TValue>()
                 {
                     key = key,
                     timestamp = getTimespan(),
@@ -53,11 +54,11 @@ namespace LEA.Lib.Tasks
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public T Dequeue(String key)
+        public TValue Dequeue(TKey key)
         {
             lock (lockObject)
             {
-                var topItem = (from x in queueItems where x.key == key select x)
+                var topItem = (from x in queueItems where x.key.Equals(key) select x)
                           ?.OrderBy(x => x.timestamp)?.FirstOrDefault();
                 if (topItem != null)
                 {
@@ -65,14 +66,14 @@ namespace LEA.Lib.Tasks
                     return topItem.item;
                 }
             }
-            return  default(T); 
+            return  default(TValue); 
         }
 
-        public bool isExist(String key)
+        public bool isExist(TKey key)
         {
             lock (lockObject)
             {
-                var item = (from x in queueItems where x.key == key select x)
+                var item = (from x in queueItems where x.key.Equals(key) select x)
                   ?.OrderBy(x => x.timestamp)?.FirstOrDefault();
 
                 if (item == null)

@@ -21,7 +21,7 @@ namespace LEA.Lib.Tasks
 
         private static readonly Object locker = new Object();
 
-        private static QueueByKey<Task> queueByKey = new QueueByKey<Task>();
+        private static QueueByKey<String,Task> queueByKey = new QueueByKey<String,Task>();
 
         private static double getTimespan()
         {
@@ -34,14 +34,14 @@ namespace LEA.Lib.Tasks
         /// <param name="task"></param>
         public static void Add(String key, Task task)
         {
-            TaskPool.AddToQueue(key + getTimespan().ToString(), task);
+            TaskPool.Push(key + getTimespan().ToString(), task);
         }
         /// <summary>
         ///   Add asynchronous task to queue by key
         /// </summary>
         /// <param name="key"></param>
         /// <param name="task"></param>
-        public static void AddToQueue(String key, Task task)
+        public static void Push(String key, Task task)
         {
 
             task.ContinueWith(t =>

@@ -240,6 +240,7 @@
             this.dataGridViewProduct.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.dataGridViewProduct_EditingControlShowing);
             this.dataGridViewProduct.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewProduct_RowEnter);
             this.dataGridViewProduct.RowLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewProduct_RowLeave);
+            this.dataGridViewProduct.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.dataGridViewProduct_RowPrePaint);
             this.dataGridViewProduct.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.dataGridViewProduct_RowsAdded_1);
             this.dataGridViewProduct.SelectionChanged += new System.EventHandler(this.dataGridViewProduct_SelectionChanged);
             this.dataGridViewProduct.Leave += new System.EventHandler(this.dataGridViewProduct_Leave);

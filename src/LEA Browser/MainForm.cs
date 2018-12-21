@@ -538,7 +538,7 @@ namespace LEA.Browser
             });
 
             String key = "GetVoiceRecord:" + rowID.ToString();
-            TaskPool.AddToQueue(key, task);
+            TaskPool.Push(key, task);
 
 
             #endregion
@@ -556,7 +556,7 @@ namespace LEA.Browser
             });
 
             String keySMS = "GetSMSRecord:" + rowID.ToString() + GetTimestamp(DateTime.Now);
-            TaskPool.AddToQueue(keySMS, taskSMS);
+            TaskPool.Push(keySMS, taskSMS);
         }
 
         #endregion
@@ -681,8 +681,12 @@ namespace LEA.Browser
             }
         }
 
+
         #endregion
 
+        private void dataGridViewProduct_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
+        {
 
+        }
     }
 }

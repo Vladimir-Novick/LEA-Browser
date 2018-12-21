@@ -165,7 +165,7 @@ namespace LEA.Lib.DB
         {
             Task task = new Task(ProductUpdateAction, productItem);
             String key = "UpdateProductRecord:" + productItem.Id.ToString();
-            TaskPool.AddToQueue(key, task);
+            TaskPool.Push(key, task);
         }
 
 
@@ -213,7 +213,7 @@ namespace LEA.Lib.DB
         {
             Task task = new Task(investigationUpdateAction, investigationItem);
             String key = "UpdateInvestigationRecord:" + investigationItem.id.ToString();
-            TaskPool.AddToQueue(key, task);
+            TaskPool.Push(key, task);
         }
 
         Action<object> investigationUpdateAction = (object obj) =>
@@ -308,7 +308,7 @@ namespace LEA.Lib.DB
         {
             Task task = new Task(VoiceUpdateAction, voiceCallItem);
             String key = "UpdateVoiceCallItemRecor:" + voiceCallItem.ProductId.ToString();
-            TaskPool.AddToQueue(key, task);
+            TaskPool.Push(key, task);
         }
 
 
@@ -362,7 +362,7 @@ namespace LEA.Lib.DB
         {
             Task task = new Task(SmsUpdateAction, smsMessageItem);
             String key = "UpdateSmsMessageRecord:" + smsMessageItem.ProductID.ToString();
-            TaskPool.AddToQueue(key, task);
+            TaskPool.Push(key, task);
         }
 
 
