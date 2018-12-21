@@ -9,9 +9,7 @@ GO
 
 
 CREATE PROCEDURE [dbo].[SelectProduct]
-	
 	@InvestigationId int 
-	
 AS
 BEGIN
 	SET NOCOUNT ON;
@@ -28,7 +26,7 @@ BEGIN
    BEGIN
    	  SELECT t1.*,t2.Name as Investigation from Product t1
       left join [Investigation] t2 on t1.InvestigationId = t2.id
-	   order by t1.CreationDate;
+	  order by t1.CreationDate;
    END
 END
 GO
