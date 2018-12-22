@@ -12,7 +12,7 @@ namespace LEA.Lib.Tasks
 
      * 
     */
-    public class TaskPool<TTask> where TTask : Task 
+    public class TaskPool<TTask>:IDisposable where TTask : Task 
                                             
     {
 
@@ -48,7 +48,7 @@ namespace LEA.Lib.Tasks
                 lock (locker)
                 {
                     threadPool.TryRemove(key, out TTask oldItem);
-
+                    oldItem?.Dispose();
                     var item = queueByKey.Dequeue(key);
                     if (item != null)
                     {
@@ -83,5 +83,34 @@ namespace LEA.Lib.Tasks
                 }
             }
         }
+
+        #region IDisposable Support
+        private bool disposedValue = false; 
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    // TODO: dispose managed state (managed objects).
+                }
+
+               
+                threadPool = null;
+
+                disposedValue = true;
+            }
+        }
+
+         ~TaskPool() {
+           Dispose(false);
+         }
+
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+        #endregion
     }
 }

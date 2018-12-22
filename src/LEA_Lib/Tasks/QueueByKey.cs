@@ -77,8 +77,6 @@ namespace LEA.Lib.Tasks
             }
         }
 
-
-
         /// <summary>
         ///   Removes and returns the object at the beginning of the Queue<T> by key
         /// </summary>
@@ -88,8 +86,10 @@ namespace LEA.Lib.Tasks
         {
             lock (lockObject)
             {
-                var topItem = (from x in queueItems where x.key.Equals(key) select x)
-                          ?.OrderBy(x => x.timestamp)?.FirstOrDefault();
+                var topItem = (from x in queueItems where x.key.Equals(key)
+                               orderby x.timestamp
+                               select x)
+                          ?.FirstOrDefault();
                 if (topItem != null)
                 {
                     queueItems.Remove(topItem);
