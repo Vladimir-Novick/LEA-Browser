@@ -5,14 +5,14 @@ using System.Linq;
 namespace LEA.Lib.Tasks
 {
 
- /*
- * 
- *  Copyright (C) 2018 by Vladimir Novick http://www.linkedin.com/in/vladimirnovick , 
- *
- * vlad.novick@gmail.com , http://www.sgcombo.com , https://github.com/Vladimir-Novick	
- *
- * 
- */
+    /*
+    * 
+    *  Copyright (C) 2018 by Vladimir Novick http://www.linkedin.com/in/vladimirnovick , 
+    *
+    * vlad.novick@gmail.com , http://www.sgcombo.com , https://github.com/Vladimir-Novick	
+    *
+    * 
+    */
 
 
     /// <summary>
@@ -22,6 +22,7 @@ namespace LEA.Lib.Tasks
     /// <typeparam name="TKey"></typeparam>
     /// <typeparam name="TValue"></typeparam>
     public class QueueByKey<TKey, TValue> where TKey : IEquatable<TKey>
+
     {
 
         private Object lockObject = new Object();
@@ -34,6 +35,23 @@ namespace LEA.Lib.Tasks
         }
 
         private List<QueueItem<TKey, TValue>> queueItems = new List<QueueItem<TKey, TValue>>();
+        /// <summary>
+        ///  get keys 
+        /// </summary>
+        public List<TKey> Keys
+        {
+            get
+            {
+
+                List<TKey> rez;
+
+                lock (lockObject)
+                {
+                    rez = (from p in queueItems select p.key).Distinct().ToList();
+                }
+                return rez;
+            }
+        }
 
         private double getTimespan()
         {
