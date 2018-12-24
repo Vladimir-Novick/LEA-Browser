@@ -22,7 +22,6 @@ namespace LEA.Lib.Tasks
     /// <typeparam name="TKey"></typeparam>
     /// <typeparam name="TValue"></typeparam>
     public class QueueByKey<TKey, TValue> where TKey : IEquatable<TKey>
-
     {
 
         private Object lockObject = new Object();
@@ -42,7 +41,6 @@ namespace LEA.Lib.Tasks
         {
             get
             {
-
                 List<TKey> rez;
 
                 lock (lockObject)
@@ -53,6 +51,45 @@ namespace LEA.Lib.Tasks
             }
         }
 
+        /// <summary>
+        ///   Clear all items by key
+        /// </summary>
+        /// <param name="key"></param>
+        public void Clear(TKey key)
+        {
+            lock (lockObject)
+            {
+                var rez = from p in queueItems where p.key.Equals(key) select p;
+                foreach (var item in rez)
+                {
+                    queueItems.Remove(item);
+                }
+            }
+        }
+
+        /// <summary>
+        ///   Returns the object at the beginning by TKye of the Queue without removing it.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public TValue Peek(TKey key)
+        {
+            lock (lockObject)
+            {
+                var topItem = (from x in queueItems
+                               where x.key.Equals(key)
+                               orderby x.timestamp
+                               select x)
+                         ?.FirstOrDefault();
+                if (topItem != null)
+                {
+                    return topItem.item;
+                }
+            }
+            return default(TValue);
+        }
+
+   
         private double getTimespan()
         {
             return (DateTime.Now - DateTime.MinValue).TotalMilliseconds;
@@ -86,7 +123,8 @@ namespace LEA.Lib.Tasks
         {
             lock (lockObject)
             {
-                var topItem = (from x in queueItems where x.key.Equals(key)
+                var topItem = (from x in queueItems
+                               where x.key.Equals(key)
                                orderby x.timestamp
                                select x)
                           ?.FirstOrDefault();
