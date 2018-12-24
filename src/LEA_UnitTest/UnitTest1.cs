@@ -23,19 +23,23 @@ namespace LEA_UnitTest
             QueueByKey<String, string> queueByKey = new QueueByKey<String, string>();
             for (int tk = 0; tk < threadCount; tk++)
             {
+                int threadID = tk;
                 var t = Task.Run(() =>
                 {
                   
                     Thread.Sleep(random.Next(100, 2000));
                     for (int i = 0; i < countIterator; i++)
                     {
-
-                        Thread.Sleep(random.Next(20, 100));
+                        int iElement = 0;
+                        var items = new List<int>();
                         string key = i.ToString();
-                        for (int iElement = 0; iElement < countIterator; iElement++)
+                        while (items.Count < countIterator)
                         {
-                            Thread.Sleep(random.Next(20, 100));
-                            queueByKey.Enqueue(key, iElement.ToString());
+                            Task wait = Task.Delay(50);
+                            wait.Wait();
+                            while (items.Contains(iElement)) { iElement = random.Next(0, countIterator); }
+                            items.Add(iElement);
+                            queueByKey.Enqueue(key, iElement.ToString() + "/" + threadID.ToString());
                         }
                     }
                 });
