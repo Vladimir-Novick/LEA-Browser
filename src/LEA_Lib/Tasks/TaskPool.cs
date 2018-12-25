@@ -42,8 +42,9 @@ namespace LEA.Lib.Tasks
         /// <param name="task"></param>
         public  void PushToQueue(String key, TTask task)
         {
-
-            task.ContinueWith(t =>
+            var awaiter = task.GetAwaiter();
+           
+            awaiter.OnCompleted(() =>
             {
                 lock (locker)
                 {
