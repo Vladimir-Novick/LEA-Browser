@@ -12,17 +12,17 @@ namespace LEA.Lib.Tasks
 
      * 
     */
-    public class TaskPool<TTask>:IDisposable where TTask : Task 
-                                            
+    public class TaskPool<TTask> : IDisposable where TTask : Task
+
     {
 
-        private  ConcurrentDictionary<String, TTask> threadPool = new ConcurrentDictionary<String, TTask>();
+        private ConcurrentDictionary<String, TTask> threadPool = new ConcurrentDictionary<String, TTask>();
 
         private readonly Object locker = new Object();
 
-        private  QueueByKey<String, TTask> queueByKey = new QueueByKey<String, TTask>();
+        public QueueByKey<String, TTask> queueByKey = new QueueByKey<String, TTask>();
 
-        private  double getTimespan()
+        private double getTimespan()
         {
             return (DateTime.Now - DateTime.MinValue).TotalMilliseconds;
         }
@@ -31,7 +31,7 @@ namespace LEA.Lib.Tasks
         /// </summary>
         /// <param name="key"></param>
         /// <param name="task"></param>
-        public  void Push(String key, TTask task)
+        public void Push(String key, TTask task)
         {
             PushToQueue(key.ToString() + getTimespan().ToString(), task);
         }
@@ -40,53 +40,56 @@ namespace LEA.Lib.Tasks
         /// </summary>
         /// <param name="key"></param>
         /// <param name="task"></param>
-        public  void PushToQueue(String key, TTask task)
+        public void PushToQueue(String key, TTask task)
         {
             var awaiter = task.GetAwaiter();
-           
             awaiter.OnCompleted(() =>
             {
                 lock (locker)
                 {
-                    threadPool.TryRemove(key, out TTask oldItem);
-                    oldItem?.Dispose();
-                    var item = queueByKey.Dequeue(key);
-                    if (item != null)
-                    {
-                        try
-                        {
-                            task.Start();
-                            bool ok = threadPool.TryAdd(key, task);
-                        } catch (Exception ex)
-                        {
-
-                        } 
-                        
-                    }
+                    ExtractAndRunTask(key);
                 }
 
             });
 
             lock (locker)
             {
-                if (!threadPool.Values.Contains(task))
+                queueByKey.Enqueue(key, task);
+                ExtractAndRunTask(key);
+            }
+        }
+
+        private void ExtractAndRunTask(string key)
+        {
+            threadPool.TryRemove(key, out TTask oldItem);
+
+            oldItem?.Dispose();
+
+            var item = queueByKey.Dequeue(key);
+            if (item != null)
+            {
+                try
                 {
-                    bool ok = threadPool.ContainsKey(key);
-                    if (ok)
+                    if (!(item.IsCompleted || item.IsCanceled || item.IsFaulted))
                     {
-                        queueByKey.Enqueue(key, task);
+                        item.Start();
+                        bool ok = threadPool.TryAdd(key, item);
                     }
                     else
                     {
-                        threadPool.TryAdd(key, task);
-                        task.Start();
+                        ExtractAndRunTask(key);
                     }
                 }
+                catch (Exception ex)
+                {
+                    ExtractAndRunTask(key);
+                }
+
             }
         }
 
         #region IDisposable Support
-        private bool disposedValue = false; 
+        private bool disposedValue = false;
 
         protected virtual void Dispose(bool disposing)
         {
@@ -94,19 +97,31 @@ namespace LEA.Lib.Tasks
             {
                 if (disposing)
                 {
-                    // TODO: dispose managed state (managed objects).
+                    lock (locker)
+                    {
+                        queueByKey.Clear();
+                    }
+                        foreach (var item in threadPool)
+                    {
+                        try
+                        {
+                            item.Value.Dispose();
+                        }
+                        catch (Exception) { }
+                    }
                 }
 
-               
+
                 threadPool = null;
 
                 disposedValue = true;
             }
         }
 
-         ~TaskPool() {
-           Dispose(false);
-         }
+        ~TaskPool()
+        {
+            Dispose(false);
+        }
 
         public void Dispose()
         {

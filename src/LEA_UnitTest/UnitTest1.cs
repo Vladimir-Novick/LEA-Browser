@@ -51,15 +51,13 @@ namespace LEA_UnitTest
             Task.WaitAll(listTask.ToArray());
 
             string value;
-            int counter = 0;
+          
             foreach (var item in queueByKey.Keys)
             {
-                counter = 0;
+              
                 while ((value = queueByKey.Dequeue(item)) != null)
                 {
                     Console.WriteLine($"{item} => {value}");
-
-
                 }
                 Console.WriteLine($"----------------------");
 

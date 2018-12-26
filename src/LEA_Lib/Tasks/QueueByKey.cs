@@ -50,6 +50,16 @@ namespace LEA.Lib.Tasks
                 return rez;
             }
         }
+        /// <summary>
+        ///   Clear all
+        /// </summary>
+        public void Clear()
+        {
+            lock (lockObject)
+            {
+                queueItems.Clear();
+            }
+        }
 
         /// <summary>
         ///   Clear all items by key
@@ -89,7 +99,7 @@ namespace LEA.Lib.Tasks
             return default(TValue);
         }
 
-   
+
         private double getTimespan()
         {
             return (DateTime.Now - DateTime.MinValue).TotalMilliseconds;
